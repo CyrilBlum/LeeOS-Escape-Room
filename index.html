@@ -855,13 +855,16 @@
       <p>
         Es ist Freitag, 07:58 Uhr. Moodle hustet, der Beamer flackert, und auf dem Bildschirm steht:
         <span class="mono">LEE-GPT-9000 HAS TAKEN CONTROL</span>. Die KI hat aus Stundenplänen, Prüfungen und WLAN-Logs
-        ein einziges, beleidigend selbstbewusstes Datenpaket gebaut.
+        ein einziges, beleidigend selbstbewusstes Datenpaket gebaut. Sie sperrt alle Türen des Schulgebäudes hinter verschlüsselten Sicherheitssystemen.
       </p>
       <p>
-        Ihr Auftraggeber ist bereits im Stressmodus. Arbeiten Sie sich Raum für Raum durchs Lee, sammeln Sie die Splitter aus den Systemen
-        und bringen Sie den Haupteingang wieder online, bevor der Pausengong alles endgültig einfriert.
+        Im Informatikzimmer 103 läuft noch ein Terminal. Das ist Euer Basislager – von hier aus habt Ihr Zugriff auf die Sicherheitssysteme der anderen Räume.
+        Die KI kontrolliert jede Tür einzeln. Um sie freizuschalten, müsst Ihr versteckte Logiken aufbrechen, die in den Systemen selbst eingebaut sind.
       </p>
-      <div class="mission-line">AUFTRAG: Folgen Sie den Spuren. Das Gebäude antwortet nur auf saubere Rekonstruktion.</div>
+      <p>
+        Arbeitet euch Raum für Raum durchs Lee, löst jedes System, sammelt die Splitter und rekonstruiert den Master-Key für den Haupteingang – bevor der Pausengong alles endgültig einfriert.
+      </p>
+      <div class="mission-line">AUFTRAG: Löst die Systeme. Sammelt die Splitter. Stellt den Master-Key wieder her.</div>
       <div class="grid">
         <div class="card"><strong>Team:</strong><br>3–4 Personen pro Zugriff</div>
         <div class="card"><strong>Zeitfenster:</strong><br>Bis der Gong alles einfriert</div>
@@ -869,19 +872,19 @@
         <div class="card"><strong>Terminal:</strong><br>Leerzeichen und Gross-/Kleinschreibung sind nachsichtig</div>
       </div>
       <div class="grid">
-        <div class="card"><strong>Lageplan:</strong><br>Informatikzimmer (103) -> Lehrerzimmer -> Treppenhaus -> Mediothek -> Serverraum -> Aula -> Mensa -> Haupteingang</div>
-        <div class="card"><strong>Merke:</strong><br>Manche Türen behalten mehr, als sie anzeigen.</div>
+        <div class="card"><strong>Reihenfolge:</strong><br>Informatikzimmer (103) → Lehrerzimmer → Treppenhaus → Mediothek → Serverraum → Aula → Mensa → Haupteingang</div>
+        <div class="card"><strong>Hinweis:</strong><br>Jedes gelöste System entsperrt die nächste Tür automatisch.</div>
       </div>
     </section>
 
     <section class="room" id="room1">
       <div class="room-title">
-        <div><h2>Station 1: Informatikzimmer (103)</h2><div class="small">Thema: Programmieren, Listen, Dictionaries, Bubble Sort</div></div>
+        <div><h2>Station 1: Informatikzimmer (103)</h2></div>
         <div class="badge" id="badge1">offen</div>
       </div>
       <div class="content">
         <div class="location">Aktueller Raum: Informatikzimmer (103)</div>
-        <p>Sie starten im Informatikzimmer 103. Auf dem Bildschirm neben der Tür zum Lehrerzimmer läuft ein Python-Skript mit sechs herausgebissenen Stellen.</p>
+        <p>Hier ist eure Zentrale. Auf dem Bildschirm neben der Tür läuft ein Skript – es verarbeitet Daten in einer Struktur mit sechs Lücken. Füllt die Lücken sinnvoll aus und startet das Programm. Die Ausgabe öffnet die erste Tür.</p>
         <pre class="python-code"><span class="py-var">daten</span> <span class="py-op">=</span> <span class="py-punc">[</span>
     <span class="py-punc">{</span><span class="py-str">"station"</span><span class="py-punc">:</span> <span class="py-str">"K"</span><span class="py-punc">,</span> <span class="py-str">"messung"</span><span class="py-punc">:</span> <span class="py-punc">[</span><span class="py-num">4</span><span class="py-punc">,</span> <span class="py-num">2</span><span class="py-punc">,</span> <span class="py-num">1</span><span class="py-punc">]</span><span class="py-punc">,</span> <span class="py-str">"token"</span><span class="py-punc">:</span> <span class="py-str">"X"</span><span class="py-punc">}</span><span class="py-punc">,</span>
     <span class="py-punc">{</span><span class="py-str">"station"</span><span class="py-punc">:</span> <span class="py-str">"L"</span><span class="py-punc">,</span> <span class="py-str">"messung"</span><span class="py-punc">:</span> <span class="py-punc">[</span><span class="py-num">1</span><span class="py-punc">,</span> <span class="py-num">1</span><span class="py-punc">,</span> <span class="py-num">2</span><span class="py-punc">]</span><span class="py-punc">,</span> <span class="py-str">"token"</span><span class="py-punc">:</span> <span class="py-str">"Q"</span><span class="py-punc">}</span><span class="py-punc">,</span>
@@ -916,27 +919,27 @@
             <span id="blankStatusE">E: offen</span>
             <span id="blankStatusF">F: offen</span>
           </div>
-          <div class="hint" id="blankHints">A und E steuern die Schleife. B, C und D bilden den Tausch mit einer temporären Variable. F ist der Schlüssel im Dictionary, aus dem die Zeichen gesammelt werden.</div>
+          <div class="hint" id="blankHints">A und E kontrollieren Schleif-Verhalten. B, C, D sind für den Datenaustausch zuständig. F greift auf einen bestimmten Wert aus der Datenstruktur zu.</div>
         </div>
-        <p>Das Terminal unter dem Skript wartet auf die Ausgabe von <span class="mono">print(code)</span>.</p>
+        <p>Das Skript wird ausgeführt. Was steht im Terminal?</p>
         <div class="input-row">
           <input id="answer1" autocomplete="off" placeholder="Ausgabe eingeben" />
           <button onclick="check(1)">Prüfen</button>
           <button class="secondary" onclick="hint(1)">Hinweis</button>
         </div>
-        <div class="hint" id="hint1">Bubble Sort vergleicht Nachbarn. <span class="mono">i</span> startet beim ersten Durchlauf und wird nach jeder Runde um 1 erhöht. Beim Tausch wird zuerst der linke Eintrag zwischengespeichert.</div>
+        <div class="hint" id="hint1">Es ist eine Sortierlogik mit Austausch. Die temporäre Variable speichert einen Wert zwischenzeitlich. Der Dictionary-Schlüssel bestimmt, welche Zeichen am Ende zusammengefügt werden.</div>
         <div class="feedback" id="feedback1"></div>
       </div>
     </section>
 
     <section class="room locked" id="room2">
       <div class="room-title">
-        <div><h2>Station 2: Lehrerzimmer</h2><div class="small">Thema: Netzwerke, DNS, nslookup, Ping</div></div>
+        <div><h2>Station 2: Lehrerzimmer</h2></div>
         <div class="badge" id="badge2">gesperrt</div>
       </div>
       <div class="content">
         <div class="location">Neuer Raum: Lehrerzimmer</div>
-        <p>Im Lehrerzimmer steckt ein Admin-Laptop am Netzwerk. Sie müssen die IP-Adresse von <strong>teacher-laptop-03.klw.local</strong> finden und diesen Computer pingen, um Zugang zu erlauben.</p>
+        <p>Im Lehrerzimmer steht ein Admin-Laptop am Netzwerk. Das System verifiziert Authentizität durch zwei Abfragen – erst die Identität, dann die Erreichbarkeit. Das Terminal wartet auf eure Eingaben.</p>
         
         <div class="terminal-window">
           <div class="terminal-header">
@@ -980,30 +983,30 @@
 
     <section class="room locked" id="room3">
       <div class="room-title">
-        <div><h2>Station 3: Treppenhaus</h2><div class="small">Thema: Caesar, Häufigkeitsanalyse</div></div>
+        <div><h2>Station 3: Treppenhaus</h2></div>
         <div class="badge" id="badge3">gesperrt</div>
       </div>
       <div class="content">
         <div class="location">Neuer Raum: Treppenhaus</div>
-        <p>Sie stehen im Treppenhaus vor der Tür der Mediothek. Neben dem Türgriff klebt eine Caesar-Spur. Die Verschiebung ist egal; gesucht ist der Buchstabe, den man bei deutschen Texten am ehesten als häufigsten Klartextbuchstaben erwarten würde.</p>
+        <p>Neben der Mediothek-Tür klebt ein verschobenes Alphabet. Ein Notiz daneben sagt: <span class="mono">"Das Geheimnis liegt in der Sprache selbst. Welcher Laut dominiert dein Deutsch?"</span></p>
         <div class="media-panel cipher-wheel">
           <div>Alphabet</div><div class="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
-          <div>Caesar +4</div><div class="alphabet">EFGHIJKLMNOPQRSTUVWXYZABCD</div>
+          <div>Verschoben</div><div class="alphabet">EFGHIJKLMNOPQRSTUVWXYZABCD</div>
         </div>
-        <p>Welcher Buchstabe kommt in deutschen Texten typischerweise am häufigsten vor?</p>
+        <p>Was ist die Antwort?</p>
         <div class="input-row">
           <input id="answer3" autocomplete="off" placeholder="Antwort eingeben" />
           <button onclick="check(3)">Prüfen</button>
           <button class="secondary" onclick="hint(3)">Hinweis</button>
         </div>
-        <div class="hint" id="hint3">Nicht im Caesar-Alphabet zählen. Es geht um die deutsche Sprache.</div>
+        <div class="hint" id="hint3">Die Verschiebung ist ein Ablenkung. Denke an typische deutsche Wörter und wie oft bestimmte Buchstaben darin vorkommen.</div>
         <div class="feedback" id="feedback3"></div>
       </div>
     </section>
 
     <section class="room locked" id="room4">
       <div class="room-title">
-        <div><h2>Station 4: Mediothek</h2><div class="small">Thema: Vigenère-Verschlüsselung</div></div>
+        <div><h2>Station 4: Mediothek</h2></div>
         <div class="badge" id="badge4">gesperrt</div>
       </div>
       <div class="content">
@@ -1028,7 +1031,7 @@ Geheimtext: DXENOSGIVQPSH</pre>
 
     <section class="room locked" id="room5">
       <div class="room-title">
-        <div><h2>Station 5: Serverraum</h2><div class="small">Thema: Selbstkorrigierende Codes, RAID-4, XOR-Parität</div></div>
+        <div><h2>Station 5: Serverraum</h2></div>
         <div class="badge" id="badge5">gesperrt</div>
       </div>
       <div class="content">
@@ -1091,7 +1094,7 @@ Geheimtext: DXENOSGIVQPSH</pre>
 
     <section class="room locked" id="room6">
       <div class="room-title">
-        <div><h2>Station 6: Aula</h2><div class="small">Thema: True Positives, False Negatives, Sensitivität</div></div>
+        <div><h2>Station 6: Aula</h2></div>
         <div class="badge" id="badge6">gesperrt</div>
       </div>
       <div class="content">
@@ -1117,7 +1120,7 @@ Geheimtext: DXENOSGIVQPSH</pre>
 
     <section class="room locked" id="room7">
       <div class="room-title">
-        <div><h2>Station 7: Mensa</h2><div class="small">Thema: Algorithmen, Big-O, Humor</div></div>
+        <div><h2>Station 7: Mensa</h2></div>
         <div class="badge" id="badge7">gesperrt</div>
       </div>
       <div class="content">
