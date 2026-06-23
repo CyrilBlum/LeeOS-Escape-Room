@@ -19,7 +19,10 @@
       --shadow: #000044;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' shape-rendering='crispEdges'%3E%3Cpath fill='%23fff' d='M4 2h4v2h2v2h2v2h2v2h2v2h2v2h2v4h-4v-2h-2v6h-4v-8h-2v6H8V8H6V6H4z'/%3E%3Cpath fill='%23000' d='M2 0h8v2h2v2h2v2h2v2h2v2h2v2h2v8h-6v-2h-1v6H8v-8H6v6H4V10H2zm2 2v4h2v2h2v12h2v-6h4v8h2v-8h4v-2h-2v-2h-2V8h-2V6h-2V4h-2V2z'/%3E%3C/svg%3E") 4 2, pointer !important;
+    }
 
     html { background: var(--blue); }
 
@@ -683,6 +686,10 @@
       animation: meme-pop-in .16s steps(2, end), meme-crash 2.2s steps(8, end) forwards;
     }
 
+    .meme-pop.sticky.show {
+      animation: meme-pop-in .16s steps(2, end);
+    }
+
     .meme-pop::before {
       content: "MEME.EXE // GENERAL FAILURE";
       display: block;
@@ -700,6 +707,110 @@
       max-height: calc(min(58vh, 480px) - 34px);
       object-fit: contain;
       background: var(--black);
+    }
+
+    .meme-window {
+      position: fixed;
+      right: calc(18px + var(--stack-offset, 0px));
+      bottom: calc(18px + var(--stack-offset, 0px));
+      z-index: var(--stack-z, 240);
+      width: min(340px, calc(100vw - 36px));
+      max-height: min(58vh, 480px);
+      padding: 8px;
+      border: 3px solid var(--yellow);
+      background: var(--white);
+      box-shadow: 8px 8px 0 var(--black);
+      transform: rotate(-1deg);
+      animation: meme-pop-in .16s steps(2, end);
+    }
+
+    .meme-window::before {
+      content: "MEME.EXE // RANDOM ACCESS";
+      display: block;
+      margin: -8px -8px 8px;
+      padding: 4px 42px 4px 8px;
+      background: var(--yellow);
+      color: var(--black);
+      border-bottom: 3px solid var(--black);
+      font-weight: 900;
+    }
+
+    .meme-window img {
+      display: block;
+      width: 100%;
+      max-height: calc(min(58vh, 480px) - 34px);
+      object-fit: contain;
+      background: var(--black);
+    }
+
+    .meme-close {
+      position: absolute;
+      top: 3px;
+      right: 4px;
+      width: 30px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 2px solid var(--black);
+      background: var(--red);
+      color: var(--white);
+      box-shadow: 2px 2px 0 var(--black);
+      animation: none;
+      line-height: 1;
+    }
+
+    .jukebox {
+      border: 2px solid var(--white);
+      background: var(--black);
+      box-shadow: 8px 8px 0 var(--black);
+      margin: 28px 0 10px;
+      padding: 0 14px 14px;
+      position: relative;
+    }
+
+    .jukebox::before {
+      content: ":: JUKEBOX.SYS / ASSETS_SOUND ::"; 
+      display: block;
+      margin: 0 -14px 14px;
+      padding: 5px 9px;
+      background: var(--yellow);
+      color: var(--black);
+      border-bottom: 2px solid var(--white);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .jukebox-controls {
+      display: grid;
+      grid-template-columns: 1fr auto auto minmax(120px, 180px);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .jukebox select,
+    .jukebox input[type="range"] {
+      width: 100%;
+      min-width: 0;
+      border: 2px solid var(--white);
+      background: var(--blue2);
+      color: var(--yellow);
+      padding: 9px 10px;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 900;
+      box-shadow: 3px 3px 0 var(--black);
+    }
+
+    .jukebox input[type="range"] {
+      padding: 0;
+      accent-color: var(--yellow);
+    }
+
+    .jukebox-now {
+      margin-top: 10px;
+      color: var(--green);
+      font-weight: 900;
+      min-height: 20px;
     }
 
     @keyframes freeflower-spin {
@@ -878,6 +989,11 @@
       text-align: center;
       font-weight: 900;
       perspective: 1000px;
+      pointer-events: auto;
+    }
+
+    .deco-shape:hover {
+      filter: brightness(1.3) saturate(1.25);
     }
 
     .deco-shape img {
@@ -1010,6 +1126,13 @@
         bottom: 10px;
         width: min(300px, calc(100vw - 20px));
       }
+      .jukebox-controls {
+        grid-template-columns: 1fr 1fr;
+      }
+      .jukebox select,
+      .jukebox input[type="range"] {
+        grid-column: 1 / -1;
+      }
     }
   </style>
 </head>
@@ -1121,7 +1244,7 @@
 <span class="py-fn">print</span><span class="py-punc">(</span><span class="py-var">code</span><span class="py-punc">)</span></pre>
         <div class="blank-panel">
           <div class="input-row">
-            <button class="secondary" onclick="checkBlanks(true)">Lücken prüfen</button>
+            <button class="secondary" onclick="checkBlanks(true, true)">Lücken prüfen</button>
             <button class="secondary" onclick="showBlankHints()">Lücken-Hinweise</button>
           </div>
           <div class="blank-status" id="blankStatus">
@@ -1286,7 +1409,7 @@
           <div class="raid-slice s9" id="raidSlice9">9</div>
         </div>
         <div class="input-row">
-          <button onclick="checkRaidRows(true)">Rekonstruktion prüfen</button>
+          <button onclick="checkRaidRows(true, true)">Rekonstruktion prüfen</button>
           <button class="secondary" onclick="hint(5)">Hinweis</button>
         </div>
         <div id="raidGameQuestion" class="hidden">
@@ -1432,6 +1555,22 @@ for i in range(n):
       </div>
     </section>
 
+    <section class="jukebox" aria-label="Jukebox">
+      <div class="jukebox-controls">
+        <select id="jukeboxTrack" aria-label="Song wählen">
+          <option value="assets/sound/Smooth Criminal - Michael Jackson's Moonwalker (Arcade) Soundtrack.mp3">Michael Jackson - Smooth Criminal</option>
+          <option value="assets/sound/Hechizeros Band - El Sonidito.mp3">Hechizeros Band - El Sonidito</option>
+          <option value="assets/sound/Aretha Franklin - Chain of Fools (Official Lyric Video).mp3">Aretha Franklin - Chain of Fools</option>
+          <option value="assets/sound/Son Of A Preacher Man.mp3">Son Of A Preacher Man</option>
+          <option value="assets/sound/Castle Frankenstein (2017) - TempleOS Game.mp3">Castle Frankenstein - TempleOS Game</option>
+        </select>
+        <button type="button" onclick="playJukebox()">Play</button>
+        <button type="button" class="secondary" onclick="pauseJukebox()">Pause</button>
+        <input id="jukeboxVolume" type="range" min="0" max="1" step="0.05" value="0.7" aria-label="Jukebox Lautstärke" />
+      </div>
+      <div class="jukebox-now" id="jukeboxNow">READY: wählen und Play drücken.</div>
+    </section>
+
     <p class="footer-note">Anpassbar: Namen, Insider, Rätselcodes und Story lassen sich direkt im HTML/JavaScript ändern.</p>
   </main>
 
@@ -1481,6 +1620,20 @@ for i in range(n):
       "assets/memes/meme_8.png"
     ];
     let memeTimer = null;
+    const effectSounds = {
+      wrong: "assets/sound/erro.mp3",
+      correct: "assets/sound/tada_1.mp3",
+      hint: "assets/sound/cartoon-flip_0mhhTzj.mp3",
+      yay: "assets/sound/yay-roblox.mp3"
+    };
+    const effectPlayers = Object.fromEntries(
+      Object.entries(effectSounds).map(([key, src]) => [key, new Audio(src)])
+    );
+    const jukeboxAudio = new Audio();
+    jukeboxAudio.loop = true;
+    jukeboxAudio.autoplay = true;
+    let jukeboxUnlockArmed = false;
+    let memeWindowCount = 0;
 
     function normalise(s) {
       return (s || "")
@@ -1506,31 +1659,139 @@ for i in range(n):
       localStorage.setItem(storageKey, JSON.stringify({ solved: [...solved], debugUnlocked }));
     }
 
-    function showMeme() {
+    function showMeme(requireClose = false) {
       const pop = document.getElementById("memePop");
       const img = document.getElementById("memeImage");
       if (!pop || !img) return;
       const next = memeImages[Math.floor(Math.random() * memeImages.length)];
       img.src = next;
       pop.classList.remove("show");
+      pop.classList.toggle("sticky", requireClose);
       void pop.offsetWidth;
       pop.classList.add("show");
       clearTimeout(memeTimer);
-      memeTimer = setTimeout(() => pop.classList.remove("show"), 2300);
+      memeTimer = null;
+      if (!requireClose) {
+        memeTimer = setTimeout(() => {
+          if (!pop.classList.contains("sticky")) pop.classList.remove("show");
+          memeTimer = null;
+        }, 2300);
+      }
+    }
+
+    function openMemeWindow() {
+      const next = memeImages[Math.floor(Math.random() * memeImages.length)];
+      const windowEl = document.createElement("div");
+      const closeButton = document.createElement("button");
+      const img = document.createElement("img");
+      const offset = Math.min(memeWindowCount * 26, 208);
+      memeWindowCount += 1;
+
+      windowEl.className = "meme-window";
+      windowEl.style.setProperty("--stack-offset", offset + "px");
+      windowEl.style.setProperty("--stack-z", String(240 + memeWindowCount));
+      windowEl.setAttribute("role", "dialog");
+      windowEl.setAttribute("aria-label", "Zufalls-Meme");
+
+      closeButton.className = "meme-close";
+      closeButton.type = "button";
+      closeButton.textContent = "X";
+      closeButton.setAttribute("aria-label", "Meme schliessen");
+      closeButton.addEventListener("click", event => {
+        event.stopPropagation();
+        windowEl.remove();
+      });
+
+      img.src = next;
+      img.alt = "Programmier-Meme";
+      windowEl.append(closeButton, img);
+      document.body.appendChild(windowEl);
+    }
+
+    function playEffect(name) {
+      const player = effectPlayers[name];
+      if (!player) return;
+      player.currentTime = 0;
+      player.play().catch(() => {});
+    }
+
+    function selectedTrackName() {
+      const select = document.getElementById("jukeboxTrack");
+      if (!select) return "";
+      return select.options[select.selectedIndex].textContent;
+    }
+
+    function playJukebox() {
+      const select = document.getElementById("jukeboxTrack");
+      const volume = document.getElementById("jukeboxVolume");
+      const now = document.getElementById("jukeboxNow");
+      if (!select) return;
+      if (jukeboxAudio.src !== new URL(select.value, window.location.href).href) {
+        jukeboxAudio.src = select.value;
+      }
+      jukeboxAudio.volume = volume ? Number(volume.value) : 0.7;
+      jukeboxAudio.play().then(() => {
+        if (now) now.textContent = "PLAYING: " + selectedTrackName();
+      }).catch(() => {
+        if (now) now.textContent = "CLICK NEEDED: Play noch einmal drücken.";
+      });
+    }
+
+    function pauseJukebox() {
+      const now = document.getElementById("jukeboxNow");
+      jukeboxAudio.pause();
+      if (now) now.textContent = "PAUSED: " + selectedTrackName();
+    }
+
+    function playSonidito() {
+      const select = document.getElementById("jukeboxTrack");
+      if (!select) return;
+      select.value = "assets/sound/Hechizeros Band - El Sonidito.mp3";
+      playJukebox();
+    }
+
+    function autoplayJukebox() {
+      const select = document.getElementById("jukeboxTrack");
+      const volume = document.getElementById("jukeboxVolume");
+      const now = document.getElementById("jukeboxNow");
+      if (!select) return;
+      jukeboxAudio.src = select.value;
+      jukeboxAudio.volume = volume ? Number(volume.value) : 0.7;
+      jukeboxAudio.play().then(() => {
+        if (now) now.textContent = "AUTOPLAYING: " + selectedTrackName();
+      }).catch(() => {
+        if (now) now.textContent = "AUTOPLAY BLOCKED: Play drücken.";
+        armJukeboxUnlock();
+      });
+    }
+
+    function armJukeboxUnlock() {
+      if (jukeboxUnlockArmed) return;
+      jukeboxUnlockArmed = true;
+      const unlock = () => {
+        jukeboxUnlockArmed = false;
+        playJukebox();
+        document.removeEventListener("pointerdown", unlock);
+        document.removeEventListener("keydown", unlock);
+      };
+      document.addEventListener("pointerdown", unlock, { once: true });
+      document.addEventListener("keydown", unlock, { once: true });
     }
 
     function activateDebug() {
       const input = document.getElementById("debugPassword");
-      const value = normalise(input.value);
-      if (value === "BLUMDEBUG" || value === "DEBUG") {
-        debugUnlocked = true;
+      const value = (input.value || "").trim().toUpperCase();
+      if (value === "THE_REAL_BLUM") {
+        debugUnlocked = !debugUnlocked;
         input.value = "";
-        input.placeholder = "DEBUG AKTIV";
+        input.placeholder = debugUnlocked ? "DEBUG AKTIV" : "DEBUG AUS";
         save();
         update();
+        playEffect("correct");
       } else {
         input.value = "";
         input.placeholder = "FALSCH";
+        playEffect("wrong");
       }
     }
 
@@ -1548,9 +1809,11 @@ for i in range(n):
         feedback.textContent = "Schlüssel korrekt! Nutzen Sie die Vigenère-Tabelle, um den Text manuell zu entschlüsseln.";
         document.getElementById("vigenerePanel").style.display = "block";
         document.getElementById("vigenereQuestion").style.display = "block";
+        playEffect("correct");
       } else {
         feedback.className = "feedback bad";
         feedback.textContent = "Schlüssel ungültig. Der Schlüssel besteht aus den Splittern der Stationen 1-3.";
+        playEffect("wrong");
       }
     }
 
@@ -1572,7 +1835,7 @@ for i in range(n):
       target.innerHTML = html;
     }
 
-    function checkBlanks(showHints = false) {
+    function checkBlanks(showHints = false, playAudio = false) {
       let allGood = true;
       for (const key of Object.keys(blankSolutions)) {
         const input = document.getElementById("blank" + key);
@@ -1580,19 +1843,24 @@ for i in range(n):
         const answer = normaliseCode(input.value);
         const valid = blankSolutions[key].answers.map(normaliseCode).includes(answer);
         const empty = answer.length === 0;
+        const wasCorrect = input.dataset.correct === "true";
 
         input.classList.toggle("ok", valid);
         input.classList.toggle("nope", !valid && !empty);
         status.className = valid ? "ok" : (!empty ? "nope" : "");
         status.textContent = key + ": " + (valid ? "richtig" : (showHints ? blankSolutions[key].hint : "offen"));
+        input.dataset.correct = valid ? "true" : "false";
+        if (valid && !wasCorrect) playEffect("yay");
         if (!valid) allGood = false;
       }
+      if (playAudio) playEffect(allGood ? "correct" : "wrong");
       return allGood;
     }
 
     function showBlankHints() {
       document.getElementById("blankHints").style.display = "block";
       checkBlanks(true);
+      playEffect("hint");
     }
 
     function checkTerminalBlanks(showFeedback = false) {
@@ -1635,6 +1903,11 @@ for i in range(n):
     function showTerminalHints() {
       document.getElementById("terminalHints").style.display = "block";
       checkTerminalBlanks();
+      playEffect("hint");
+    }
+
+    function playTerminalSubmitSound(input) {
+      if (input && input.classList.contains("nope")) playEffect("wrong");
     }
 
     function checkCommands() {
@@ -1653,6 +1926,7 @@ for i in range(n):
           if (e.key === "Enter") {
             e.preventDefault();
             checkCommands();
+            playTerminalSubmitSound(cmd1Input);
           }
         });
         cmd1Input.focus();
@@ -1689,6 +1963,7 @@ for i in range(n):
           if (e.key === "Enter") {
             e.preventDefault();
             checkCommands();
+            playTerminalSubmitSound(cmd2Input);
           }
         });
         cmd2Input.focus();
@@ -1727,6 +2002,7 @@ for i in range(n):
           }
           save();
           update();
+          playEffect("correct");
         } else if (!cmd2Correct && cmd2.length > 0) {
           cmd2Input.classList.add("nope");
           cmd2Input.classList.remove("ok");
@@ -1736,7 +2012,7 @@ for i in range(n):
       }
     }
 
-    function checkRaidRows(showFeedback = false) {
+    function checkRaidRows(showFeedback = false, playAudio = false) {
       let correct = 0;
       for (const row of Object.keys(raidSolutions)) {
         const input = document.getElementById("raid" + row);
@@ -1759,6 +2035,7 @@ for i in range(n):
           feedback.className = "feedback warn";
           feedback.textContent = "9/9 Zeilen rekonstruiert. Auf dem Monitor erscheint eine neue Frage.";
         }
+        if (playAudio) playEffect("correct");
         return true;
       }
 
@@ -1767,6 +2044,7 @@ for i in range(n):
         feedback.className = "feedback warn";
         feedback.textContent = correct + "/9 Zeilen rekonstruiert.";
         showMeme();
+        if (playAudio) playEffect("wrong");
       }
       return false;
     }
@@ -1774,7 +2052,10 @@ for i in range(n):
     function checkRaidGame() {
       const feedback = document.getElementById("feedback5");
       const answer = normalise(document.getElementById("raidGameAnswer").value);
-      if (!checkRaidRows(true)) return;
+      if (!checkRaidRows(true)) {
+        playEffect("wrong");
+        return;
+      }
 
       if (answer === "GTA") {
         solved.add(5);
@@ -1782,10 +2063,13 @@ for i in range(n):
         feedback.textContent = rooms[5].solvedText;
         save();
         update();
+        playEffect("correct");
+        playSonidito();
       } else {
         feedback.className = "feedback bad";
         feedback.textContent = "Das Bild ist rekonstruiert, aber das Spiel stimmt noch nicht.";
         showMeme();
+        playEffect("wrong");
       }
     }
 
@@ -1794,7 +2078,7 @@ for i in range(n):
       const feedback = document.getElementById("feedback" + n);
       
       if (n === 5) {
-        checkRaidRows(true);
+        checkRaidRows(true, true);
         return;
       }
       if (n === 7) {
@@ -1808,6 +2092,7 @@ for i in range(n):
         feedback.className = "feedback warn";
         feedback.textContent = "Das Skript ist noch beschädigt.";
         showMeme();
+        playEffect("wrong");
         return;
       }
 
@@ -1817,15 +2102,18 @@ for i in range(n):
         feedback.textContent = rooms[n].solvedText;
         save();
         update();
+        playEffect("correct");
       } else {
         feedback.className = "feedback bad";
         feedback.textContent = "Noch nicht. Irgendwo stimmt die Spur nicht.";
         showMeme();
+        playEffect("wrong");
       }
     }
 
     function hint(n) {
       document.getElementById("hint" + n).style.display = "block";
+      playEffect("hint");
     }
 
     function normaliseRuntime(s) {
@@ -1845,10 +2133,12 @@ for i in range(n):
         feedback.textContent = rooms[7].solvedText;
         save();
         update();
+        playEffect("correct");
       } else {
         feedback.className = "feedback bad";
         feedback.textContent = "Das Orakel bleibt still.";
         showMeme();
+        playEffect("wrong");
       }
     }
 
@@ -1895,10 +2185,12 @@ for i in range(n):
         setTimeout(() => {
           document.getElementById("win").classList.remove("hidden");
         }, 800);
+        playEffect("correct");
       } else {
         feedback.className = "feedback bad";
         feedback.textContent = "SQL-Syntax ungültig oder falsches Lösungswort. Bitte versuchen Sie es erneut.";
         showMeme();
+        playEffect("wrong");
       }
     }
 
@@ -1911,11 +2203,11 @@ for i in range(n):
           return;
         }
         if (active.dataset && active.dataset.blank) {
-          checkBlanks(true);
+          checkBlanks(true, true);
           return;
         }
         if (active.dataset && active.dataset.raid) {
-          checkRaidRows(true);
+          checkRaidRows(true, true);
           return;
         }
         if (active.id === "raidGameAnswer") checkRaidGame();
@@ -1925,6 +2217,7 @@ for i in range(n):
         }
         if (active.id === "cmd1" || active.id === "cmd2") {
           checkCommands();
+          playTerminalSubmitSound(active);
           return;
         }
         const m = active.id.match(/^answer([1-6])$/);
@@ -1948,6 +2241,7 @@ for i in range(n):
         if (e.key === "Enter") {
           e.preventDefault();
           checkCommands();
+          playTerminalSubmitSound(cmd1);
           if (document.getElementById("cmd2")) {
             document.getElementById("cmd2").focus();
           }
@@ -1960,13 +2254,43 @@ for i in range(n):
       cmd2.addEventListener("input", () => checkCommands());
     }
 
-    document.getElementById("memePop").addEventListener("click", () => {
+    document.getElementById("memePop").addEventListener("click", event => {
+      event.stopPropagation();
       clearTimeout(memeTimer);
-      document.getElementById("memePop").classList.remove("show");
+      memeTimer = null;
+      document.getElementById("memePop").classList.remove("show", "sticky");
+    });
+
+    document.querySelectorAll(".deco-shape").forEach(symbol => {
+      symbol.tabIndex = 0;
+      symbol.setAttribute("role", "button");
+      symbol.setAttribute("aria-label", "Zufalls-Meme öffnen");
+      symbol.addEventListener("click", event => {
+        event.stopPropagation();
+        openMemeWindow();
+      });
+      symbol.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openMemeWindow();
+        }
+      });
+    });
+
+    document.getElementById("jukeboxTrack").addEventListener("change", () => {
+      const wasPlaying = !jukeboxAudio.paused;
+      jukeboxAudio.src = document.getElementById("jukeboxTrack").value;
+      document.getElementById("jukeboxNow").textContent = "LOADED: " + selectedTrackName();
+      if (wasPlaying) playJukebox();
+    });
+
+    document.getElementById("jukeboxVolume").addEventListener("input", event => {
+      jukeboxAudio.volume = Number(event.target.value);
     });
 
     buildVigenereTable();
     update();
+    autoplayJukebox();
     
     // Initialize terminal for room 2
     setTimeout(() => {
