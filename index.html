@@ -936,8 +936,7 @@
       </div>
       <div class="content">
         <div class="location">Neuer Raum: Lehrerzimmer</div>
-        <p>Im Lehrerzimmer steckt ein Admin-Laptop am Netzwerk. Die Lehrercomputer sind im DNS eingetragen. Sie müssen die richtige IP-Adresse finden und den Computer pingen.</p>
-        <p><strong>Aufgabe:</strong> Geben Sie zuerst den <span class="mono">nslookup</span>-Befehl ein, um die IP von <strong>teacher-laptop-03.klw.local</strong> zu finden. Dann pingen Sie diese Adresse.</p>
+        <p>Im Lehrerzimmer steckt ein Admin-Laptop am Netzwerk. Sie müssen die IP-Adresse von <strong>teacher-laptop-03.klw.local</strong> finden und diesen Computer pingen, um Zugang zu erlauben.</p>
         
         <div class="terminal-window">
           <div class="terminal-header">
@@ -949,30 +948,6 @@
             <div class="terminal-title">Terminal</div>
           </div>
           <div class="terminal-content" id="terminalContent">
-            <div>$ <input class="terminal-input cmd-input" id="cmd1" autocomplete="off" aria-label="Befehl 1: nslookup" placeholder="nslookup teacher-laptop-03.klw.local" /></div>
-            <div id="nslookupOutput" class="hidden">
-              <div>Server:  10.42.0.1</div>
-              <div>Address: 10.42.0.1#53</div>
-              <div></div>
-              <div>Non-authoritative answer:</div>
-              <div>Name:    teacher-laptop-03.klw.local</div>
-              <div>Address: 10.42.3.44</div>
-              <div></div>
-            </div>
-            <div id="pingPrompt" class="hidden">$ <input class="terminal-input cmd-input" id="cmd2" autocomplete="off" aria-label="Befehl 2: ping" placeholder="ping 10.42.3.44" /></div>
-            <div id="pingOutput" class="hidden">
-              <div>PING 10.42.3.44 (10.42.3.44): 56 data bytes</div>
-              <div>64 bytes from 10.42.3.44: icmp_seq=0 ttl=64 time=12.3 ms</div>
-              <div>64 bytes from 10.42.3.44: icmp_seq=1 ttl=64 time=11.8 ms</div>
-              <div id="successIndicator" class="hidden" style="color: #ffff00; margin-top: 4px; font-weight: bold;">✓ Verbindung erfolgreich!</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="blank-panel">
-          <div class="blank-status" id="terminalStatus">
-            <span id="statusCmd1">nslookup: <span style="color: #ffff00;">ausstehend</span></span>
-            <span id="statusCmd2">ping: <span style="color: #aaaaaa;">wartet auf nslookup</span></span>
           </div>
         </div>
 
@@ -980,10 +955,24 @@
           <button class="secondary" onclick="hint(2)">Hinweise</button>
         </div>
         <div class="hint" id="hint2" style="display: none;">
-          <p><strong>nslookup:</strong> Gibt die IP-Adresse eines DNS-Namens aus.</p>
-          <p>Befehl: <span class="mono">nslookup teacher-laptop-03.klw.local</span></p>
-          <p><strong>ping:</strong> Kontaktiert einen Computer über seine IP-Adresse.</p>
-          <p>Befehl: <span class="mono">ping 10.42.3.44</span></p>
+          <p><strong>Nützliche Netzwerk-Befehle:</strong></p>
+          <table style="margin-top: 8px; background: var(--white); color: var(--black);">
+            <thead>
+              <tr style="background: var(--cyan);">
+                <th style="border: 2px solid var(--black); padding: 8px;">Befehl</th>
+                <th style="border: 2px solid var(--black); padding: 8px;">Funktion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">nslookup &lt;domain&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Findet die IP-Adresse zu einem DNS-Namen</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">host &lt;domain&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Ähnlich wie nslookup, DNS-Abfrage</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">ping &lt;IP oder domain&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Testet die Verbindung zu einem Computer</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">arp -a</span></td><td style="border: 2px solid var(--black); padding: 8px;">Zeigt die ARP-Tabelle (IP-zu-MAC-Mapping)</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">tracert &lt;IP&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Verfolgt die Route zu einem Computer</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">ifconfig</span></td><td style="border: 2px solid var(--black); padding: 8px;">Zeigt lokale Netzwerk-Konfiguration</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">netstat</span></td><td style="border: 2px solid var(--black); padding: 8px;">Zeigt aktive Netzwerk-Verbindungen</td></tr>
+            </tbody>
+          </table>
         </div>
         <div class="feedback" id="feedback2"></div>
       </div>
@@ -1388,38 +1377,87 @@ for i in range(n):
     }
 
     function checkCommands() {
-      const cmd1 = (document.getElementById("cmd1").value || "").trim().toLowerCase();
-      const cmd2 = (document.getElementById("cmd2").value || "").trim().toLowerCase();
-      
-      const cmd1Correct = cmd1 === "nslookup teacher-laptop-03.klw.local";
-      const cmd2Correct = cmd2 === "ping 10.42.3.44";
-      
-      // Check command 1
-      if (cmd1Correct) {
-        document.getElementById("cmd1").classList.add("ok");
-        document.getElementById("cmd1").classList.remove("nope");
-        document.getElementById("nslookupOutput").classList.remove("hidden");
-        document.getElementById("pingPrompt").classList.remove("hidden");
-        document.getElementById("statusCmd1").innerHTML = 'nslookup: <span style="color: #00ff00;">✓</span>';
-      } else if (cmd1.length > 0) {
-        document.getElementById("cmd1").classList.add("nope");
-        document.getElementById("cmd1").classList.remove("ok");
-        document.getElementById("statusCmd1").innerHTML = 'nslookup: <span style="color: #ff6666;">✗</span>';
-      } else {
-        document.getElementById("cmd1").classList.remove("ok", "nope");
-        document.getElementById("statusCmd1").innerHTML = 'nslookup: <span style="color: #ffff00;">ausstehend</span>';
+      const terminalContent = document.getElementById("terminalContent");
+      if (!terminalContent) return;
+
+      // Create cmd1 input if it doesn't exist
+      let cmd1Input = document.getElementById("cmd1");
+      if (!cmd1Input) {
+        const cmd1Div = document.createElement("div");
+        cmd1Div.innerHTML = '$ <input class="terminal-input cmd-input" id="cmd1" autocomplete="off" aria-label="Befehl 1: nslookup" />';
+        terminalContent.appendChild(cmd1Div);
+        cmd1Input = document.getElementById("cmd1");
+        cmd1Input.addEventListener("input", () => checkCommands());
+        cmd1Input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            checkCommands();
+          }
+        });
+        cmd1Input.focus();
+        return;
       }
 
-      // Check command 2 (only if cmd1 is correct)
-      if (cmd1Correct) {
-        if (cmd2Correct) {
-          document.getElementById("cmd2").classList.add("ok");
-          document.getElementById("cmd2").classList.remove("nope");
-          document.getElementById("pingOutput").classList.remove("hidden");
-          document.getElementById("successIndicator").classList.remove("hidden");
-          document.getElementById("statusCmd2").innerHTML = 'ping: <span style="color: #00ff00;">✓</span>';
-          
-          // Mark as solved after a short delay
+      const cmd1 = (cmd1Input.value || "").trim().toLowerCase();
+      const cmd1Correct = cmd1 === "nslookup teacher-laptop-03.klw.local";
+
+      // Check command 1
+      if (cmd1Correct && !document.getElementById("cmd2")) {
+        cmd1Input.classList.add("ok");
+        cmd1Input.classList.remove("nope");
+
+        // Add nslookup output
+        const output1 = document.createElement("div");
+        output1.innerHTML = `<div>Server:  10.42.0.1</div>
+<div>Address: 10.42.0.1#53</div>
+<div></div>
+<div>Non-authoritative answer:</div>
+<div>Name:    teacher-laptop-03.klw.local</div>
+<div>Address: 10.42.3.44</div>
+<div></div>`;
+        terminalContent.appendChild(output1);
+
+        // Add cmd2 input
+        const cmd2Div = document.createElement("div");
+        cmd2Div.innerHTML = '$ <input class="terminal-input cmd-input" id="cmd2" autocomplete="off" aria-label="Befehl 2: ping" />';
+        terminalContent.appendChild(cmd2Div);
+
+        const cmd2Input = document.getElementById("cmd2");
+        cmd2Input.addEventListener("input", () => checkCommands());
+        cmd2Input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            checkCommands();
+          }
+        });
+        cmd2Input.focus();
+      } else if (!cmd1Correct && cmd1.length > 0) {
+        cmd1Input.classList.add("nope");
+        cmd1Input.classList.remove("ok");
+      } else if (cmd1.length === 0) {
+        cmd1Input.classList.remove("ok", "nope");
+      }
+
+      // Check command 2
+      const cmd2Input = document.getElementById("cmd2");
+      if (cmd2Input && cmd1Correct) {
+        const cmd2 = (cmd2Input.value || "").trim().toLowerCase();
+        const cmd2Correct = cmd2 === "ping 10.42.3.44";
+
+        if (cmd2Correct && !document.getElementById("pingOutput")) {
+          cmd2Input.classList.add("ok");
+          cmd2Input.classList.remove("nope");
+
+          // Add ping output
+          const output2 = document.createElement("div");
+          output2.id = "pingOutput";
+          output2.innerHTML = `<div>PING 10.42.3.44 (10.42.3.44): 56 data bytes</div>
+<div>64 bytes from 10.42.3.44: icmp_seq=0 ttl=64 time=12.3 ms</div>
+<div>64 bytes from 10.42.3.44: icmp_seq=1 ttl=64 time=11.8 ms</div>
+<div style="color: #ffff00; margin-top: 4px; font-weight: bold;">✓ Verbindung erfolgreich!</div>`;
+          terminalContent.appendChild(output2);
+
+          // Mark as solved
           setTimeout(() => {
             if (!solved.has(2)) {
               solved.add(2);
@@ -1429,17 +1467,12 @@ for i in range(n):
               update();
             }
           }, 500);
-        } else if (cmd2.length > 0) {
-          document.getElementById("cmd2").classList.add("nope");
-          document.getElementById("cmd2").classList.remove("ok");
-          document.getElementById("statusCmd2").innerHTML = 'ping: <span style="color: #ff6666;">✗</span>';
-        } else {
-          document.getElementById("cmd2").classList.remove("ok", "nope");
-          document.getElementById("statusCmd2").innerHTML = 'ping: <span style="color: #ffff00;">ausstehend</span>';
+        } else if (!cmd2Correct && cmd2.length > 0) {
+          cmd2Input.classList.add("nope");
+          cmd2Input.classList.remove("ok");
+        } else if (cmd2.length === 0) {
+          cmd2Input.classList.remove("ok", "nope");
         }
-      } else {
-        document.getElementById("cmd2").classList.remove("ok", "nope");
-        document.getElementById("statusCmd2").innerHTML = 'ping: <span style="color: #aaaaaa;">wartet auf nslookup</span>';
       }
     }
 
@@ -1663,6 +1696,14 @@ for i in range(n):
 
     buildVigenereTable();
     update();
+    
+    // Initialize terminal for room 2
+    setTimeout(() => {
+      const terminalContent = document.getElementById("terminalContent");
+      if (terminalContent && terminalContent.innerHTML.trim() === "") {
+        checkCommands();
+      }
+    }, 100);
   </script>
 </body>
 </html>
