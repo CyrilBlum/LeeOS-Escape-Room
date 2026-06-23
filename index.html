@@ -19,6 +19,16 @@
       --shadow: #000044;
     }
 
+    body.konami-mode {
+      --blue: #220044;
+      --blue2: #003355;
+      --cyan: #ff66ff;
+      --yellow: #66ffcc;
+      --red: #ff3355;
+      --green: #ffff66;
+      animation: konami-palette 1.2s steps(4, end) infinite;
+    }
+
     * {
       box-sizing: border-box;
       cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' shape-rendering='crispEdges'%3E%3Cpath fill='%23fff' d='M4 2h4v2h2v2h2v2h2v2h2v2h2v2h2v4h-4v-2h-2v6h-4v-8h-2v6H8V8H6V6H4z'/%3E%3Cpath fill='%23000' d='M2 0h8v2h2v2h2v2h2v2h2v2h2v2h2v8h-6v-2h-1v6H8v-8H6v6H4V10H2zm2 2v4h2v2h2v12h2v-6h4v8h2v-8h4v-2h-2v-2h-2V8h-2V6h-2V4h-2V2z'/%3E%3C/svg%3E") 4 2, pointer !important;
@@ -824,6 +834,44 @@
       min-height: 20px;
     }
 
+    .equalizer {
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      align-items: end;
+      gap: 3px;
+      height: 34px;
+      margin-top: 10px;
+      padding: 4px;
+      border: 2px solid var(--white);
+      background: var(--blue2);
+      box-shadow: inset 0 0 0 2px var(--black);
+    }
+
+    .eq-bar {
+      display: block;
+      height: 20%;
+      min-height: 4px;
+      background: var(--darkgray);
+      box-shadow: 2px 0 0 var(--black);
+    }
+
+    .jukebox.playing .eq-bar {
+      background: linear-gradient(to top, var(--green), var(--yellow), var(--red));
+      animation: eq-bounce var(--eq-speed, .72s) steps(5, end) infinite;
+      animation-delay: var(--eq-delay, 0s);
+    }
+
+    .mouse-pixel {
+      position: fixed;
+      z-index: 1000;
+      width: var(--pixel-size, 8px);
+      height: var(--pixel-size, 8px);
+      pointer-events: none;
+      background: var(--pixel-color, var(--yellow));
+      box-shadow: 2px 2px 0 var(--black);
+      animation: mouse-pixel-fade .62s steps(5, end) forwards;
+    }
+
     .win-overlay {
       position: fixed;
       inset: 0;
@@ -904,9 +952,76 @@
       padding: 0 18px 22px;
     }
 
+    .konami-hint {
+      position: fixed;
+      right: 12px;
+      bottom: 150px;
+      z-index: 370;
+      padding: 7px 10px;
+      border: 2px solid var(--white);
+      background: var(--black);
+      color: var(--yellow);
+      box-shadow: 4px 4px 0 var(--black);
+      font-size: .72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      animation: konami-hint-flash 1.1s steps(3, end) infinite;
+    }
+
+    .meme-rain-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 355;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .meme-rain {
+      position: absolute;
+      top: -150px;
+      width: clamp(70px, 9vw, 140px);
+      border: 2px solid var(--yellow);
+      background: var(--white);
+      box-shadow: 5px 5px 0 var(--black);
+      animation: meme-rain-fall var(--fall-duration, 4s) linear forwards;
+    }
+
     @keyframes freeflower-spin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
+    }
+
+    @keyframes eq-bounce {
+      0%, 100% { height: 16%; }
+      20% { height: var(--eq-a, 70%); }
+      45% { height: var(--eq-b, 38%); }
+      70% { height: var(--eq-c, 92%); }
+    }
+
+    @keyframes mouse-pixel-fade {
+      0% { opacity: 1; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--drift-x, 8px), var(--drift-y, 10px)) scale(.35); }
+    }
+
+    @keyframes konami-palette {
+      0% { filter: hue-rotate(0deg) saturate(1.2); }
+      25% { filter: hue-rotate(80deg) saturate(1.8); }
+      50% { filter: hue-rotate(170deg) saturate(1.5) contrast(1.15); }
+      75% { filter: hue-rotate(260deg) saturate(2); }
+      100% { filter: hue-rotate(360deg) saturate(1.2); }
+    }
+
+    @keyframes konami-hint-flash {
+      0% { background: var(--black); color: var(--yellow); transform: translate(0, 0); }
+      33% { background: var(--red); color: var(--white); transform: translate(-1px, 1px); }
+      66% { background: var(--cyan); color: var(--black); transform: translate(1px, -1px); }
+      100% { background: var(--black); color: var(--yellow); transform: translate(0, 0); }
+    }
+
+    @keyframes meme-rain-fall {
+      0% { transform: translateY(-160px) rotate(-8deg); opacity: 0; }
+      8% { opacity: 1; }
+      100% { transform: translateY(calc(100vh + 220px)) rotate(28deg); opacity: .95; }
     }
 
     @keyframes button-blink {
@@ -1237,6 +1352,15 @@
         margin-top: 8px;
         font-size: .82rem;
       }
+      .equalizer {
+        height: 28px;
+        gap: 2px;
+      }
+      .konami-hint {
+        right: 8px;
+        bottom: 238px;
+        font-size: .62rem;
+      }
     }
   </style>
 </head>
@@ -1247,6 +1371,8 @@
   <div class="meme-pop" id="memePop" role="status" aria-live="polite" title="Klick zum Schliessen">
     <img id="memeImage" src="assets/memes/meme_1.jpg" alt="Programmier-Meme" />
   </div>
+  <div class="meme-rain-layer" id="memeRainLayer" aria-hidden="true"></div>
+  <div class="konami-hint">↑ ↑ ↓ ↓ ← → ← → B A</div>
   <div class="win-overlay" id="winOverlay" role="dialog" aria-modal="true" aria-labelledby="winOverlayTitle">
     <div class="win-screen">
       <h2 id="winOverlayTitle">YOU HAVE WON</h2>
@@ -1690,6 +1816,24 @@ for i in range(n):
         <input id="jukeboxVolume" type="range" min="0" max="1" step="0.05" value="0.7" aria-label="Jukebox Lautstärke" />
       </div>
       <div class="jukebox-now" id="jukeboxNow">READY: wählen und Play drücken.</div>
+      <div class="equalizer" id="jukeboxEqualizer" aria-hidden="true">
+        <span class="eq-bar" style="--eq-a: 76%; --eq-b: 30%; --eq-c: 88%; --eq-speed: .62s; --eq-delay: -.10s;"></span>
+        <span class="eq-bar" style="--eq-a: 42%; --eq-b: 78%; --eq-c: 58%; --eq-speed: .74s; --eq-delay: -.36s;"></span>
+        <span class="eq-bar" style="--eq-a: 91%; --eq-b: 44%; --eq-c: 70%; --eq-speed: .68s; --eq-delay: -.22s;"></span>
+        <span class="eq-bar" style="--eq-a: 55%; --eq-b: 86%; --eq-c: 38%; --eq-speed: .82s; --eq-delay: -.48s;"></span>
+        <span class="eq-bar" style="--eq-a: 84%; --eq-b: 35%; --eq-c: 95%; --eq-speed: .66s; --eq-delay: -.18s;"></span>
+        <span class="eq-bar" style="--eq-a: 34%; --eq-b: 68%; --eq-c: 52%; --eq-speed: .78s; --eq-delay: -.40s;"></span>
+        <span class="eq-bar" style="--eq-a: 72%; --eq-b: 47%; --eq-c: 82%; --eq-speed: .70s; --eq-delay: -.26s;"></span>
+        <span class="eq-bar" style="--eq-a: 96%; --eq-b: 55%; --eq-c: 64%; --eq-speed: .64s; --eq-delay: -.08s;"></span>
+        <span class="eq-bar" style="--eq-a: 48%; --eq-b: 92%; --eq-c: 44%; --eq-speed: .86s; --eq-delay: -.52s;"></span>
+        <span class="eq-bar" style="--eq-a: 80%; --eq-b: 32%; --eq-c: 90%; --eq-speed: .72s; --eq-delay: -.16s;"></span>
+        <span class="eq-bar" style="--eq-a: 39%; --eq-b: 75%; --eq-c: 56%; --eq-speed: .80s; --eq-delay: -.44s;"></span>
+        <span class="eq-bar" style="--eq-a: 88%; --eq-b: 40%; --eq-c: 73%; --eq-speed: .67s; --eq-delay: -.20s;"></span>
+        <span class="eq-bar" style="--eq-a: 61%; --eq-b: 82%; --eq-c: 36%; --eq-speed: .76s; --eq-delay: -.34s;"></span>
+        <span class="eq-bar" style="--eq-a: 93%; --eq-b: 50%; --eq-c: 84%; --eq-speed: .69s; --eq-delay: -.24s;"></span>
+        <span class="eq-bar" style="--eq-a: 45%; --eq-b: 71%; --eq-c: 62%; --eq-speed: .83s; --eq-delay: -.46s;"></span>
+        <span class="eq-bar" style="--eq-a: 78%; --eq-b: 37%; --eq-c: 98%; --eq-speed: .65s; --eq-delay: -.12s;"></span>
+      </div>
     </section>
 
     <p class="footer-note">Anpassbar: Namen, Insider, Rätselcodes und Story lassen sich direkt im HTML/JavaScript ändern.</p>
@@ -1755,6 +1899,10 @@ for i in range(n):
     jukeboxAudio.autoplay = true;
     let jukeboxUnlockArmed = false;
     let memeWindowCount = 0;
+    const konamiSequence = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+    let konamiIndex = 0;
+    let memeRainTimer = null;
+    let lastMousePixelAt = 0;
 
     function normalise(s) {
       return (s || "")
@@ -1848,6 +1996,10 @@ for i in range(n):
       return select.options[select.selectedIndex].textContent;
     }
 
+    function setJukeboxPlaying(isPlaying) {
+      document.querySelector(".jukebox")?.classList.toggle("playing", isPlaying);
+    }
+
     function playJukebox() {
       const select = document.getElementById("jukeboxTrack");
       const volume = document.getElementById("jukeboxVolume");
@@ -1859,14 +2011,17 @@ for i in range(n):
       jukeboxAudio.volume = volume ? Number(volume.value) : 0.7;
       jukeboxAudio.play().then(() => {
         if (now) now.textContent = "PLAYING: " + selectedTrackName();
+        setJukeboxPlaying(true);
       }).catch(() => {
         if (now) now.textContent = "CLICK NEEDED: Play noch einmal drücken.";
+        setJukeboxPlaying(false);
       });
     }
 
     function pauseJukebox() {
       const now = document.getElementById("jukeboxNow");
       jukeboxAudio.pause();
+      setJukeboxPlaying(false);
       if (now) now.textContent = "PAUSED: " + selectedTrackName();
     }
 
@@ -1875,6 +2030,68 @@ for i in range(n):
       if (!select) return;
       select.value = "assets/sound/Hechizeros Band - El Sonidito.mp3";
       playJukebox();
+    }
+
+    function playSecretSong() {
+      const select = document.getElementById("jukeboxTrack");
+      const now = document.getElementById("jukeboxNow");
+      if (!select) return;
+      jukeboxAudio.src = "assets/sound/Cash In Your Face.mp3";
+      jukeboxAudio.volume = Number(document.getElementById("jukeboxVolume")?.value || 0.7);
+      jukeboxAudio.play().then(() => {
+        if (now) now.textContent = "SECRET TRACK: Stevie Wonder - Cash In Your Face";
+        setJukeboxPlaying(true);
+      }).catch(() => {
+        if (now) now.textContent = "SECRET TRACK READY: klick zum Starten.";
+        setJukeboxPlaying(false);
+        armJukeboxUnlock();
+      });
+    }
+
+    function spawnRainMeme() {
+      const layer = document.getElementById("memeRainLayer");
+      if (!layer) return;
+      const img = document.createElement("img");
+      img.className = "meme-rain";
+      img.src = memeImages[Math.floor(Math.random() * memeImages.length)];
+      img.alt = "";
+      img.style.left = Math.floor(Math.random() * 92) + "vw";
+      img.style.setProperty("--fall-duration", (3.2 + Math.random() * 2.8).toFixed(2) + "s");
+      layer.appendChild(img);
+      img.addEventListener("animationend", () => img.remove());
+    }
+
+    function startMemeRain() {
+      const layer = document.getElementById("memeRainLayer");
+      if (!layer) return;
+      clearInterval(memeRainTimer);
+      layer.innerHTML = "";
+      for (let i = 0; i < 12; i++) setTimeout(spawnRainMeme, i * 140);
+      memeRainTimer = setInterval(spawnRainMeme, 180);
+      setTimeout(() => {
+        clearInterval(memeRainTimer);
+        memeRainTimer = null;
+      }, 8500);
+    }
+
+    function activateKonamiMode() {
+      document.body.classList.add("konami-mode");
+      playSecretSong();
+      startMemeRain();
+      setTimeout(() => document.body.classList.remove("konami-mode"), 12000);
+    }
+
+    function handleKonami(event) {
+      const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+      if (key === konamiSequence[konamiIndex]) {
+        konamiIndex += 1;
+        if (konamiIndex === konamiSequence.length) {
+          konamiIndex = 0;
+          activateKonamiMode();
+        }
+        return;
+      }
+      konamiIndex = key === konamiSequence[0] ? 1 : 0;
     }
 
     function autoplayJukebox() {
@@ -1886,10 +2103,29 @@ for i in range(n):
       jukeboxAudio.volume = volume ? Number(volume.value) : 0.7;
       jukeboxAudio.play().then(() => {
         if (now) now.textContent = "AUTOPLAYING: " + selectedTrackName();
+        setJukeboxPlaying(true);
       }).catch(() => {
         if (now) now.textContent = "AUTOPLAY BLOCKED: Play drücken.";
+        setJukeboxPlaying(false);
         armJukeboxUnlock();
       });
+    }
+
+    function dropMousePixel(event) {
+      const now = Date.now();
+      if (now - lastMousePixelAt < 28) return;
+      lastMousePixelAt = now;
+      const pixel = document.createElement("span");
+      const colors = ["#ffff55", "#55ffff", "#55ff55", "#ff55ff", "#ffffff"];
+      pixel.className = "mouse-pixel";
+      pixel.style.left = event.clientX + "px";
+      pixel.style.top = event.clientY + "px";
+      pixel.style.setProperty("--pixel-size", (5 + Math.floor(Math.random() * 7)) + "px");
+      pixel.style.setProperty("--pixel-color", colors[Math.floor(Math.random() * colors.length)]);
+      pixel.style.setProperty("--drift-x", (Math.random() * 22 - 11).toFixed(1) + "px");
+      pixel.style.setProperty("--drift-y", (8 + Math.random() * 18).toFixed(1) + "px");
+      document.body.appendChild(pixel);
+      pixel.addEventListener("animationend", () => pixel.remove());
     }
 
     function armJukeboxUnlock() {
@@ -2323,6 +2559,7 @@ for i in range(n):
     }
 
     document.addEventListener("keydown", e => {
+      handleKonami(e);
       if (e.key === "Enter") {
         const active = document.activeElement;
         if (!active || !active.id) return;
@@ -2415,6 +2652,11 @@ for i in range(n):
     document.getElementById("jukeboxVolume").addEventListener("input", event => {
       jukeboxAudio.volume = Number(event.target.value);
     });
+
+    jukeboxAudio.addEventListener("play", () => setJukeboxPlaying(true));
+    jukeboxAudio.addEventListener("pause", () => setJukeboxPlaying(false));
+    jukeboxAudio.addEventListener("ended", () => setJukeboxPlaying(false));
+    document.addEventListener("pointermove", dropMousePixel);
 
     buildVigenereTable();
     update();
