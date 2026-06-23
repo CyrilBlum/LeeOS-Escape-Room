@@ -895,6 +895,15 @@
     .deco-shape-6 { font-size: 2.5rem; color: rgba(85, 255, 255, 0.4); animation: flicker-glow 4s ease-in-out infinite; }
     .deco-shape-7 { font-size: 2.9rem; color: rgba(255, 255, 85, 0.45); animation: drift-circle 10s linear infinite; }
 
+    .blink-e {
+      animation: blink-e-anim 0.6s ease-in-out infinite;
+    }
+
+    @keyframes blink-e-anim {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: .001ms !important;
@@ -995,7 +1004,7 @@
         <div class="card"><strong>Terminal:</strong><br>Leerzeichen und Gross-/Kleinschreibung sind nachsichtig</div>
       </div>
       <div class="grid">
-        <div class="card"><strong>Reihenfolge:</strong><br>Informatikzimmer (103) → Lehrerzimmer → Treppenhaus → Mediothek → Serverraum → Aula → Mensa → Haupteingang</div>
+        <div class="card"><strong>Reihenfolge:</strong><br>Informatikzimmer (103) → Lehrerzimmer → Grosse Treppe → Mediothek → Serverraum → Aula → Mensa → Haupteingang</div>
         <div class="card"><strong>Hinweis:</strong><br>Jedes gelöste System entsperrt die nächste Tür automatisch.</div>
       </div>
     </section>
@@ -1117,12 +1126,12 @@
 
     <section class="room locked" id="room3">
       <div class="room-title">
-        <div><h2>Station 3: Treppenhaus</h2></div>
+        <div><h2>Station 3: Grosse Treppe</h2></div>
         <div class="badge" id="badge3">gesperrt</div>
       </div>
       <div class="content">
-        <div class="location">Neuer Raum: Treppenhaus</div>
-        <p>Neben der Mediothek-Tür klebt ein verschobenes Alphabet. Eine Notiz daneben sagt: <span class="mono">"Das Geheimnis liegt in der Sprache selbst. Welcher Laut dominiert Ihr Deutsch?"</span></p>
+        <div class="location">Neuer Raum: Grosse Treppe</div>
+        <p>Neben der Mediothek-Tür klebt ein verschobenes Alphabet. Eine Notiz daneben sagt: <span class="mono">"Das Geheimnis liegt in der Sprache selbst. Welcher Buchstaben dominiert in der deutschen Sprache?"</span></p>
         <div class="media-panel cipher-wheel">
           <div>Alphabet</div><div class="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
           <div>Verschoben</div><div class="alphabet">EFGHIJKLMNOPQRSTUVWXYZABCD</div>
@@ -1894,6 +1903,43 @@ for i in range(n):
         checkCommands();
       }
     }, 100);
+
+    // Wrap all E letters with blink animation
+    function wrapELetters(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent;
+        const regex = /([eE])/g;
+        if (regex.test(text)) {
+          const fragment = document.createDocumentFragment();
+          let lastIndex = 0;
+          regex.lastIndex = 0;
+          let match;
+          while ((match = regex.exec(text)) !== null) {
+            if (match.index > lastIndex) {
+              fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
+            }
+            const span = document.createElement("span");
+            span.className = "blink-e";
+            span.textContent = match[1];
+            fragment.appendChild(span);
+            lastIndex = regex.lastIndex;
+          }
+          if (lastIndex < text.length) {
+            fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+          }
+          node.parentNode.replaceChild(fragment, node);
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== "SCRIPT" && node.nodeName !== "STYLE" && node.nodeName !== "CODE") {
+        const children = Array.from(node.childNodes);
+        children.forEach(child => wrapELetters(child));
+      }
+    }
+
+    // Only wrap E letters in room 3 (Grosse Treppe)
+    const room3 = document.getElementById("room3");
+    if (room3) {
+      wrapELetters(room3);
+    }
   </script>
 </body>
 </html>
