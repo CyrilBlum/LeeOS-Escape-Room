@@ -540,6 +540,95 @@
       animation: terminal-glow 1.3s steps(2, end) infinite;
     }
 
+    .terminal-window {
+      background: #1f1f1f;
+      border: 1px solid #8b8b8b;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4), 4px 4px 0 var(--black);
+      margin: 12px 0;
+      font-family: "Courier New", Courier, monospace;
+    }
+
+    .terminal-header {
+      background: linear-gradient(to bottom, #d5d5d5, #b8b8b8);
+      border-bottom: 1px solid #999;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 32px;
+    }
+
+    .terminal-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-button {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .terminal-button.red { background: #ff5f56; }
+    .terminal-button.yellow { background: #ffbd2e; }
+    .terminal-button.green { background: #27c93f; }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .terminal-content {
+      background: #000;
+      color: #00ff00;
+      padding: 12px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      min-height: 120px;
+      font-weight: 600;
+    }
+
+    .terminal-content div {
+      margin: 2px 0;
+    }
+
+    .terminal-input {
+      background: #000;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 2px 4px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.95rem;
+      font-weight: 600;
+      width: 140px;
+      outline: none;
+    }
+
+    .terminal-input:focus {
+      border-color: #ffff00;
+      box-shadow: 0 0 4px #ffff00;
+    }
+
+    .terminal-input.ok {
+      border-color: #00ff00;
+      background: #001100;
+      color: #00ff00;
+    }
+
+    .terminal-input.nope {
+      border-color: #ff0000;
+      background: #330000;
+      color: #ff6666;
+    }
+
     .small { font-size: .9rem; color: var(--cyan); }
     .hidden { display: none !important; }
     .footer-note { margin-top: 28px; text-align: center; color: var(--cyan); font-size: .9rem; }
@@ -842,30 +931,59 @@
 
     <section class="room locked" id="room2">
       <div class="room-title">
-        <div><h2>Station 2: Lehrerzimmer</h2><div class="small">Thema: Netzwerke, TCP, Protokolle</div></div>
+        <div><h2>Station 2: Lehrerzimmer</h2><div class="small">Thema: Netzwerke, DNS, nslookup, Ping</div></div>
         <div class="badge" id="badge2">gesperrt</div>
       </div>
       <div class="content">
         <div class="location">Neuer Raum: Lehrerzimmer</div>
-        <p>Im Lehrerzimmer steckt ein alter Laptop am Netzwerk. Auf dem Display ist der Mitschnitt der Türsteuerung zu sehen, kurz bevor der Weg ins Treppenhaus freigegeben wird:</p>
-        <table>
-          <thead><tr><th>Nr.</th><th>Source</th><th>Destination</th><th>Protocol</th><th>Info</th></tr></thead>
-          <tbody>
-            <tr><td>1</td><td>10.42.0.11</td><td>10.42.0.99</td><td>TCP</td><td>SYN</td></tr>
-            <tr><td>2</td><td>10.42.0.99</td><td>10.42.0.11</td><td>TCP</td><td>SYN, ACK</td></tr>
-            <tr><td>3</td><td>10.42.0.11</td><td>10.42.0.99</td><td>TCP</td><td>ACK</td></tr>
-            <tr><td>4</td><td>10.42.0.11</td><td>10.42.0.99</td><td>HTTP</td><td>GET /moodle/noten</td></tr>
-          </tbody>
-        </table>
-        <p>Welche drei TCP-Flags bilden direkt vor dem HTTP-Zugriff die Verbindung?</p>
-        <div class="input-row">
-          <input id="answer2" autocomplete="off" placeholder="Antwort eingeben" />
-          <button onclick="check(2)">Prüfen</button>
-          <button class="secondary" onclick="hint(2)">Hinweis</button>
+        <p>Im Lehrerzimmer steckt ein Admin-Laptop am Netzwerk. Die Lehrercomputer sind im DNS eingetragen. Sie müssen die richtige IP-Adresse finden und den Computer pingen.</p>
+        <p><strong>Aufgabe:</strong> Geben Sie zuerst den <span class="mono">nslookup</span>-Befehl ein, um die IP von <strong>teacher-laptop-03.klw.local</strong> zu finden. Dann pingen Sie diese Adresse.</p>
+        
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-buttons">
+              <span class="terminal-button red"></span>
+              <span class="terminal-button yellow"></span>
+              <span class="terminal-button green"></span>
+            </div>
+            <div class="terminal-title">Terminal</div>
+          </div>
+          <div class="terminal-content" id="terminalContent">
+            <div>$ <input class="terminal-input cmd-input" id="cmd1" autocomplete="off" aria-label="Befehl 1: nslookup" placeholder="nslookup teacher-laptop-03.klw.local" /></div>
+            <div id="nslookupOutput" class="hidden">
+              <div>Server:  10.42.0.1</div>
+              <div>Address: 10.42.0.1#53</div>
+              <div></div>
+              <div>Non-authoritative answer:</div>
+              <div>Name:    teacher-laptop-03.klw.local</div>
+              <div>Address: 10.42.3.44</div>
+              <div></div>
+            </div>
+            <div id="pingPrompt" class="hidden">$ <input class="terminal-input cmd-input" id="cmd2" autocomplete="off" aria-label="Befehl 2: ping" placeholder="ping 10.42.3.44" /></div>
+            <div id="pingOutput" class="hidden">
+              <div>PING 10.42.3.44 (10.42.3.44): 56 data bytes</div>
+              <div>64 bytes from 10.42.3.44: icmp_seq=0 ttl=64 time=12.3 ms</div>
+              <div>64 bytes from 10.42.3.44: icmp_seq=1 ttl=64 time=11.8 ms</div>
+              <div id="successIndicator" class="hidden" style="color: #ffff00; margin-top: 4px; font-weight: bold;">✓ Verbindung erfolgreich!</div>
+            </div>
+          </div>
         </div>
-        <div class="hint" id="hint2">
-          Lesen Sie nur die TCP-Zeilen vor dem HTTP-GET. Beim zweiten Paket kommen zwei Flags gleichzeitig.
-          <img class="hint-image" src="assets/tcp_handshake_hint.png" alt="Drei-Wege-Handshake im TCP-Protokoll" />
+
+        <div class="blank-panel">
+          <div class="blank-status" id="terminalStatus">
+            <span id="statusCmd1">nslookup: <span style="color: #ffff00;">ausstehend</span></span>
+            <span id="statusCmd2">ping: <span style="color: #aaaaaa;">wartet auf nslookup</span></span>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <button class="secondary" onclick="hint(2)">Hinweise</button>
+        </div>
+        <div class="hint" id="hint2" style="display: none;">
+          <p><strong>nslookup:</strong> Gibt die IP-Adresse eines DNS-Namens aus.</p>
+          <p>Befehl: <span class="mono">nslookup teacher-laptop-03.klw.local</span></p>
+          <p><strong>ping:</strong> Kontaktiert einen Computer über seine IP-Adresse.</p>
+          <p>Befehl: <span class="mono">ping 10.42.3.44</span></p>
         </div>
         <div class="feedback" id="feedback2"></div>
       </div>
@@ -1090,7 +1208,7 @@ for i in range(n):
   <script>
     const rooms = {
       1: { answers: ["QPX7"], fragment: "L", solvedText: "Das Skript gibt einen Türimpuls. Das Lehrerzimmer öffnet sich. Splitter: L" },
-      2: { answers: ["SYN-SYNACK-ACK", "SYN/SYNACK/ACK", "SYNSYNACKACK"], fragment: "E", solvedText: "Die Verbindung steht. Die Treppenhaustür springt auf. Splitter: E" },
+      2: { answers: ["ICMPSEQ0"], fragment: "E", solvedText: "Der Computer antwortet. Die Treppenhaustür springt auf. Splitter: E" },
       3: { answers: ["E"], fragment: "E", solvedText: "Der Buchstabe passt. Die Tür der Mediothek klickt auf. Splitter: E" },
       4: { answers: ["STACKOVERFLOW"], fragment: "S", solvedText: "Der Katalog entsperrt den Nebengang. Der Serverraum ist frei. Splitter: S" },
       5: { answers: [], fragment: "T", solvedText: "Der RAID-Verbund ist wieder vollständig. Die Aula leuchtet im Lageplan auf. Splitter: T" },
@@ -1227,6 +1345,104 @@ for i in range(n):
       checkBlanks(true);
     }
 
+    function checkTerminalBlanks(showFeedback = false) {
+      const nslookupHost = (document.getElementById("nslookupHost").value || "").trim().toLowerCase();
+      const nslookupIP = (document.getElementById("nslookupIP").value || "").trim();
+      const pingIP = (document.getElementById("pingIP").value || "").trim();
+
+      const hostValid = nslookupHost === "teacher-laptop-03.klw.local";
+      const ipValid = nslookupIP === "10.42.3.44";
+      const pingValid = pingIP === "10.42.3.44";
+
+      document.getElementById("nslookupHost").classList.toggle("ok", hostValid);
+      document.getElementById("nslookupHost").classList.toggle("nope", !hostValid && nslookupHost.length > 0);
+      document.getElementById("nslookupIP").classList.toggle("ok", ipValid);
+      document.getElementById("nslookupIP").classList.toggle("nope", !ipValid && nslookupIP.length > 0);
+      document.getElementById("pingIP").classList.toggle("ok", pingValid);
+      document.getElementById("pingIP").classList.toggle("nope", !pingValid && pingIP.length > 0);
+
+      document.getElementById("statusNslookup").textContent = hostValid ? "Hostname: ✓" : "Hostname: ✗";
+      document.getElementById("statusNslookup").className = hostValid ? "ok" : "";
+      document.getElementById("statusIP").textContent = ipValid ? "IP-Adresse: ✓" : "IP-Adresse: ✗";
+      document.getElementById("statusIP").className = ipValid ? "ok" : "";
+      document.getElementById("statusPing").textContent = pingValid ? "Ping-IP: ✓" : "Ping-IP: ✗";
+      document.getElementById("statusPing").className = pingValid ? "ok" : "";
+
+      // Show ping response if all are correct
+      if (hostValid && ipValid && pingValid) {
+        document.getElementById("pingEcho").textContent = "10.42.3.44";
+        document.getElementById("pingResponse").classList.remove("hidden");
+        document.getElementById("pingResponse2").classList.remove("hidden");
+      } else {
+        document.getElementById("pingEcho").textContent = "";
+        document.getElementById("pingResponse").classList.add("hidden");
+        document.getElementById("pingResponse2").classList.add("hidden");
+      }
+
+      return hostValid && ipValid && pingValid;
+    }
+
+    function showTerminalHints() {
+      document.getElementById("terminalHints").style.display = "block";
+      checkTerminalBlanks();
+    }
+
+    function checkCommands() {
+      const cmd1 = (document.getElementById("cmd1").value || "").trim().toLowerCase();
+      const cmd2 = (document.getElementById("cmd2").value || "").trim().toLowerCase();
+      
+      const cmd1Correct = cmd1 === "nslookup teacher-laptop-03.klw.local";
+      const cmd2Correct = cmd2 === "ping 10.42.3.44";
+      
+      // Check command 1
+      if (cmd1Correct) {
+        document.getElementById("cmd1").classList.add("ok");
+        document.getElementById("cmd1").classList.remove("nope");
+        document.getElementById("nslookupOutput").classList.remove("hidden");
+        document.getElementById("pingPrompt").classList.remove("hidden");
+        document.getElementById("statusCmd1").innerHTML = 'nslookup: <span style="color: #00ff00;">✓</span>';
+      } else if (cmd1.length > 0) {
+        document.getElementById("cmd1").classList.add("nope");
+        document.getElementById("cmd1").classList.remove("ok");
+        document.getElementById("statusCmd1").innerHTML = 'nslookup: <span style="color: #ff6666;">✗</span>';
+      } else {
+        document.getElementById("cmd1").classList.remove("ok", "nope");
+        document.getElementById("statusCmd1").innerHTML = 'nslookup: <span style="color: #ffff00;">ausstehend</span>';
+      }
+
+      // Check command 2 (only if cmd1 is correct)
+      if (cmd1Correct) {
+        if (cmd2Correct) {
+          document.getElementById("cmd2").classList.add("ok");
+          document.getElementById("cmd2").classList.remove("nope");
+          document.getElementById("pingOutput").classList.remove("hidden");
+          document.getElementById("successIndicator").classList.remove("hidden");
+          document.getElementById("statusCmd2").innerHTML = 'ping: <span style="color: #00ff00;">✓</span>';
+          
+          // Mark as solved after a short delay
+          setTimeout(() => {
+            if (!solved.has(2)) {
+              solved.add(2);
+              document.getElementById("feedback2").className = "feedback good";
+              document.getElementById("feedback2").textContent = rooms[2].solvedText;
+              save();
+              update();
+            }
+          }, 500);
+        } else if (cmd2.length > 0) {
+          document.getElementById("cmd2").classList.add("nope");
+          document.getElementById("cmd2").classList.remove("ok");
+          document.getElementById("statusCmd2").innerHTML = 'ping: <span style="color: #ff6666;">✗</span>';
+        } else {
+          document.getElementById("cmd2").classList.remove("ok", "nope");
+          document.getElementById("statusCmd2").innerHTML = 'ping: <span style="color: #ffff00;">ausstehend</span>';
+        }
+      } else {
+        document.getElementById("cmd2").classList.remove("ok", "nope");
+        document.getElementById("statusCmd2").innerHTML = 'ping: <span style="color: #aaaaaa;">wartet auf nslookup</span>';
+      }
+    }
+
     function checkRaidRows(showFeedback = false) {
       let correct = 0;
       for (const row of Object.keys(raidSolutions)) {
@@ -1283,6 +1499,7 @@ for i in range(n):
     function check(n) {
       const input = document.getElementById("answer" + n);
       const feedback = document.getElementById("feedback" + n);
+      
       if (n === 5) {
         checkRaidRows(true);
         return;
@@ -1402,6 +1619,10 @@ for i in range(n):
           checkBigO();
           return;
         }
+        if (active.id === "cmd1" || active.id === "cmd2") {
+          checkCommands();
+          return;
+        }
         const m = active.id.match(/^answer([1-6])$/);
         if (m) check(Number(m[1]));
         if (active.id === "finalAnswer") checkFinal();
@@ -1415,6 +1636,25 @@ for i in range(n):
     document.querySelectorAll("[data-raid]").forEach(input => {
       input.addEventListener("input", () => checkRaidRows(false));
     });
+
+    const cmd1 = document.getElementById("cmd1");
+    if (cmd1) {
+      cmd1.addEventListener("input", () => checkCommands());
+      cmd1.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          checkCommands();
+          if (document.getElementById("cmd2")) {
+            document.getElementById("cmd2").focus();
+          }
+        }
+      });
+    }
+
+    const cmd2 = document.getElementById("cmd2");
+    if (cmd2) {
+      cmd2.addEventListener("input", () => checkCommands());
+    }
 
     document.getElementById("memePop").addEventListener("click", () => {
       clearTimeout(memeTimer);
