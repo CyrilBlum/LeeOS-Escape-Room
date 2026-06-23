@@ -854,9 +854,9 @@
 
     .deco-container {
       position: fixed;
-      top: 0;
+      top: 90px;
       width: 140px;
-      height: 100vh;
+      height: calc(100vh - 90px);
       display: flex;
       flex-direction: column;
       justify-content: space-around;
@@ -890,7 +890,54 @@
     .deco-shape-1 { font-size: 2.8rem; color: rgba(85, 255, 255, 0.5); animation: spin-slow 12s linear infinite; }
     .deco-shape-2 { font-size: 2.4rem; color: rgba(255, 255, 85, 0.5); animation: float-up-down 6s ease-in-out infinite; }
     .deco-shape-3 { font-size: 2.6rem; color: rgba(85, 255, 255, 0.45); animation: pulse-big 5s ease-in-out infinite; }
-    .deco-shape-4 { font-size: 2.3rem; color: rgba(255, 85, 85, 0.4); animation: wobble 7s ease-in-out infinite; }
+    .deco-shape-4 { 
+      perspective: 1200px;
+    }
+
+    .coin-3d {
+      width: 80px;
+      height: 80px;
+      position: relative;
+      margin: 0 auto;
+      animation: coin-spin-3d 6s linear infinite;
+      transform-style: preserve-3d;
+    }
+
+    .coin-3d::before,
+    .coin-3d::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.8), rgba(184, 134, 11, 0.6), rgba(139, 69, 19, 0.8));
+      border: 3px solid rgba(184, 134, 11, 0.9);
+      box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.5), inset 2px 2px 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 215, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: rgba(139, 69, 19, 0.8);
+    }
+
+    .coin-3d::before {
+      content: '$';
+      transform: translateZ(2px);
+    }
+
+    .coin-3d::after {
+      content: '$';
+      transform: translateZ(-2px) rotateY(180deg);
+    }
+
+    @keyframes coin-spin-3d {
+      0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+      25% { transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg); }
+      50% { transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg); }
+      75% { transform: rotateX(180deg) rotateY(270deg) rotateZ(135deg); }
+      100% { transform: rotateX(0deg) rotateY(360deg) rotateZ(180deg); }
+    }
     .deco-shape-5 { font-size: 2.7rem; color: rgba(85, 255, 85, 0.45); animation: bounce-spin 8s ease-in-out infinite; }
     .deco-shape-6 { font-size: 2.5rem; color: rgba(85, 255, 255, 0.4); animation: flicker-glow 4s ease-in-out infinite; }
     .deco-shape-7 { font-size: 2.9rem; color: rgba(255, 255, 85, 0.45); animation: drift-circle 10s linear infinite; }
@@ -960,22 +1007,14 @@
 
   <div class="deco-container deco-left">
     <div class="deco-shape deco-shape-1"><img src="assets/backgrounds/bg_3.png" alt="TemplOS Icon" /></div>
-    <div class="deco-shape deco-shape-2">◆</div>
-    <div class="deco-shape deco-shape-3"><img src="assets/backgrounds/bg_3.png" alt="TemplOS Icon" /></div>
-    <div class="deco-shape deco-shape-4">▲</div>
+    <div class="deco-shape deco-shape-4"><div class="coin-3d"></div></div>
     <div class="deco-shape deco-shape-5"><img src="assets/backgrounds/bg_2.png" alt="CIA Icon" /></div>
-    <div class="deco-shape deco-shape-6">◉</div>
-    <div class="deco-shape deco-shape-7"><img src="assets/backgrounds/bg_3.png" alt="TemplOS Icon" /></div>
   </div>
 
   <div class="deco-container deco-right">
     <div class="deco-shape deco-shape-1"><img src="assets/backgrounds/bg_3.png" alt="TemplOS Icon" /></div>
-    <div class="deco-shape deco-shape-2">◆</div>
-    <div class="deco-shape deco-shape-3"><img src="assets/backgrounds/bg_3.png" alt="TemplOS Icon" /></div>
-    <div class="deco-shape deco-shape-4">▲</div>
+    <div class="deco-shape deco-shape-4"><div class="coin-3d"></div></div>
     <div class="deco-shape deco-shape-5"><img src="assets/backgrounds/bg_2.png" alt="CIA Icon" /></div>
-    <div class="deco-shape deco-shape-6">◉</div>
-    <div class="deco-shape deco-shape-7"><img src="assets/backgrounds/bg_3.png" alt="TemplOS Icon" /></div>
   </div>
 
   <main>
