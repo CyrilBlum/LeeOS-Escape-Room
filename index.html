@@ -1,0 +1,1416 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LeeOS 4.0 // Temple-Style Escape</title>
+  <style>
+    :root {
+      --blue: #0000aa;
+      --blue2: #000088;
+      --white: #ffffff;
+      --black: #000000;
+      --cyan: #55ffff;
+      --yellow: #ffff55;
+      --red: #ff5555;
+      --green: #55ff55;
+      --gray: #c0c0c0;
+      --darkgray: #555555;
+      --shadow: #000044;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--blue); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Courier New", Courier, monospace;
+      color: var(--white);
+      background:
+        linear-gradient(0deg, rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+        var(--blue);
+      background-size: 16px 16px;
+      text-rendering: geometricPrecision;
+    }
+
+    body::before {
+      content: "LEE/TEMPLE-STYLE DEBUG MODE   640x480   MEM OK   NET? MAYBE";
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      color: var(--blue);
+      padding: 4px 8px;
+      font-weight: 900;
+      letter-spacing: .04em;
+      border-bottom: 2px solid var(--black);
+      white-space: nowrap;
+      overflow: hidden;
+      animation: status-crawl 18s steps(36) infinite, temple-blink 1.1s steps(2, end) infinite;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 45;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 1px, transparent 1px 4px),
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.08), transparent 24%),
+        radial-gradient(circle at 50% 80%, rgba(0,0,0,.18), transparent 46%);
+      mix-blend-mode: screen;
+      opacity: .42;
+      animation: crt-flicker 4.5s steps(9, end) infinite;
+    }
+
+    header {
+      position: sticky;
+      top: 26px;
+      z-index: 50;
+      background: var(--blue);
+      border-bottom: 2px solid var(--white);
+      box-shadow: 0 4px 0 var(--black);
+    }
+
+    .bar {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto 190px;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+    }
+
+    h1, h2, h3 { margin: 0; font-weight: 900; }
+    h1 {
+      font-size: clamp(1.25rem, 3vw, 2.2rem);
+      color: var(--yellow);
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 var(--black);
+      animation: title-pop 2.6s steps(2, end) infinite;
+    }
+    h2 { font-size: 1.25rem; margin-bottom: 8px; color: var(--yellow); text-transform: uppercase; }
+    h3 { font-size: 1.05rem; margin: 18px 0 8px; color: var(--green); }
+    p { line-height: 1.45; color: var(--white); }
+    strong { color: var(--yellow); }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 2px solid var(--white);
+      background: var(--blue2);
+      padding: 5px 10px;
+      color: var(--yellow);
+      font-size: .9rem;
+      white-space: nowrap;
+      box-shadow: 3px 3px 0 var(--black);
+      animation: temple-blink 1.6s steps(2, end) infinite;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 52px 18px 60px;
+    }
+
+    .hero, .room, .finale {
+      border: 2px solid var(--white);
+      background: var(--blue2);
+      box-shadow: 8px 8px 0 var(--black);
+      padding: 0;
+      margin-bottom: 22px;
+      overflow: hidden;
+      position: relative;
+      animation: border-flash 5s steps(2, end) infinite;
+    }
+
+    .hero::before, .room::before, .finale::before {
+      display: block;
+      background: var(--white);
+      color: var(--blue);
+      border-bottom: 2px solid var(--black);
+      padding: 5px 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      animation: bar-invert 2.8s steps(2, end) infinite;
+    }
+
+    .hero::before { content: ":: LEEOS_BOOT_STORY.HC ::"; }
+    #room1::before { content: ":: STATION_01 / SORTSCRIPT.HC ::"; }
+    #room2::before { content: ":: STATION_02 / TEACHERS_LOUNGE_NETDUMP.PCAP ::"; }
+    #room3::before { content: ":: STATION_03 / CAESAR_CIPHER.TXT ::"; }
+    #room4::before { content: ":: STATION_04 / VIGENERE_TABLE.TXT ::"; }
+    #room5::before { content: ":: STATION_05 / RAID4_REBUILD.BIN ::"; }
+    #room6::before { content: ":: STATION_06 / KI_CONFUSION_MATRIX.CSV ::"; }
+    #room7::before { content: ":: STATION_07 / BIGO_ORACLE.HC ::"; }
+    #finale::before { content: ":: FINAL / KILL_LEEGPT_9000.SYS ::"; }
+
+    .hero > *, .room > *, .finale > * { margin-left: clamp(14px, 2.5vw, 24px); margin-right: clamp(14px, 2.5vw, 24px); }
+    .hero > :last-child, .room > :last-child, .finale > :last-child { margin-bottom: clamp(14px, 2.5vw, 24px); }
+    .hero > :first-child, .room > :first-child, .finale > :first-child { margin-top: clamp(14px, 2.5vw, 24px); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .mission-line {
+      border-left: 8px solid var(--yellow);
+      background: var(--black);
+      color: var(--green);
+      padding: 10px 12px;
+      font-weight: 900;
+      box-shadow: 4px 4px 0 var(--black);
+      animation: green-pulse 1.4s steps(2, end) infinite;
+    }
+
+    .media-panel {
+      border: 2px solid var(--white);
+      background: var(--black);
+      color: var(--cyan);
+      padding: 12px;
+      box-shadow: 4px 4px 0 var(--black);
+      margin: 12px 0;
+      overflow-x: auto;
+    }
+
+    .hint-image {
+      display: block;
+      width: min(100%, 760px);
+      height: auto;
+      margin-top: 10px;
+      border: 2px solid var(--yellow);
+      background: var(--white);
+      box-shadow: 4px 4px 0 var(--black);
+    }
+
+    .cipher-wheel {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px 12px;
+      align-items: center;
+      font-weight: 900;
+    }
+
+    .cipher-wheel .alphabet {
+      color: var(--yellow);
+      letter-spacing: .08em;
+      white-space: nowrap;
+    }
+
+    .vigenere-table {
+      font-size: .72rem;
+      min-width: 720px;
+      margin: 0;
+      box-shadow: none;
+    }
+
+    .vigenere-table th,
+    .vigenere-table td {
+      padding: 4px 5px;
+      text-align: center;
+    }
+
+    .raid-input {
+      width: 54px;
+      min-width: 0;
+      flex: none;
+      text-align: center;
+      padding: 6px 8px;
+    }
+
+    .raid-index {
+      background: #222244;
+      color: var(--cyan);
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .raid-reveal {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(70px, 1fr));
+      gap: 6px;
+      max-width: 420px;
+      margin: 14px 0;
+      padding: 8px;
+      border: 2px solid var(--white);
+      background: var(--black);
+      box-shadow: 4px 4px 0 var(--black);
+    }
+
+    .raid-slice {
+      aspect-ratio: 1 / 1;
+      border: 2px solid var(--darkgray);
+      background-image: linear-gradient(135deg, #111 25%, #222 25%, #222 50%, #111 50%, #111 75%, #222 75%);
+      background-size: 18px 18px;
+      display: grid;
+      place-items: center;
+      color: var(--darkgray);
+      font-weight: 900;
+      overflow: hidden;
+    }
+
+    .raid-slice.revealed {
+      border-color: var(--yellow);
+      background-image: url("assets/gta_auftraggeber.png");
+      background-size: 300% 300%;
+      color: transparent;
+    }
+
+    .raid-slice.s1 { background-position: 0% 0%; }
+    .raid-slice.s2 { background-position: 50% 0%; }
+    .raid-slice.s3 { background-position: 100% 0%; }
+    .raid-slice.s4 { background-position: 0% 50%; }
+    .raid-slice.s5 { background-position: 50% 50%; }
+    .raid-slice.s6 { background-position: 100% 50%; }
+    .raid-slice.s7 { background-position: 0% 100%; }
+    .raid-slice.s8 { background-position: 50% 100%; }
+    .raid-slice.s9 { background-position: 100% 100%; }
+
+    .card {
+      border: 2px solid var(--white);
+      background: var(--blue);
+      padding: 12px;
+      box-shadow: 4px 4px 0 var(--black);
+      min-height: 72px;
+    }
+
+    .room.locked { opacity: .52; filter: grayscale(.15); }
+    .room.locked .content { display: none; }
+    .room.solved { border-color: var(--green); box-shadow: 8px 8px 0 #003300; }
+
+    .room-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      padding: 4px 8px;
+      font-size: .78rem;
+      border: 2px solid var(--white);
+      color: var(--white);
+      background: var(--darkgray);
+      white-space: nowrap;
+      text-transform: uppercase;
+      box-shadow: 2px 2px 0 var(--black);
+      animation: badge-flash 1.25s steps(2, end) infinite;
+    }
+
+    .solved .badge { color: var(--black); background: var(--green); border-color: var(--green); }
+
+    .location {
+      display: inline-block;
+      margin: 2px 0 8px;
+      padding: 4px 8px;
+      color: var(--black);
+      background: var(--cyan);
+      border: 2px solid var(--black);
+      box-shadow: 2px 2px 0 var(--black);
+      font-size: .82rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      animation: location-snap 2.2s steps(2, end) infinite;
+    }
+
+    pre, code, .mono {
+      font-family: "Courier New", Courier, monospace;
+    }
+
+    pre {
+      background: var(--white);
+      border: 2px solid var(--black);
+      color: var(--blue);
+      padding: 12px;
+      overflow-x: auto;
+      line-height: 1.35;
+      font-weight: 900;
+      box-shadow: inset 0 0 0 2px var(--gray), 4px 4px 0 var(--black);
+    }
+
+    .python-code {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-color: #3c3c3c;
+      font-weight: 700;
+      line-height: 1.48;
+      box-shadow: inset 0 0 0 2px #252526, 4px 4px 0 var(--black);
+      tab-size: 4;
+    }
+
+    .python-code::before {
+      content: "sortscript.py";
+      display: block;
+      margin: -12px -12px 12px;
+      padding: 6px 10px;
+      background: #2d2d2d;
+      color: #cccccc;
+      border-bottom: 2px solid #3c3c3c;
+      font-size: .82rem;
+      font-weight: 900;
+    }
+
+    .py-key { color: #c586c0; }
+    .py-fn { color: #dcdcaa; }
+    .py-var { color: #9cdcfe; }
+    .py-str { color: #ce9178; }
+    .py-num { color: #b5cea8; }
+    .py-op { color: #d4d4d4; }
+    .py-punc { color: #808080; }
+
+    .code-input {
+      display: inline-block;
+      width: 96px;
+      min-width: 0;
+      flex: none;
+      margin: 0 2px;
+      padding: 2px 5px;
+      border: 2px solid #569cd6;
+      background: #111827;
+      color: #dcdcaa;
+      font-size: .95rem;
+      box-shadow: none;
+      vertical-align: baseline;
+    }
+
+    .code-input.wide { width: 138px; }
+    .code-input.short { width: 54px; text-align: center; }
+    .code-input.ok { border-color: #4ec9b0; background: #0f3b35; color: #d4ffd4; }
+    .code-input.nope { border-color: #f44747; background: #3b1111; color: #ffd7d7; }
+
+    .blank-panel {
+      border: 2px solid var(--white);
+      background: var(--black);
+      color: var(--cyan);
+      padding: 10px 12px;
+      box-shadow: 4px 4px 0 var(--black);
+      margin-top: 10px;
+    }
+
+    .blank-status {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 6px 12px;
+      margin-top: 8px;
+      font-size: .9rem;
+    }
+
+    .blank-status span { color: var(--yellow); }
+    .blank-status span.ok { color: var(--green); }
+    .blank-status span.nope { color: var(--red); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: .95rem;
+      background: var(--white);
+      color: var(--black);
+      box-shadow: 4px 4px 0 var(--black);
+    }
+
+    th, td {
+      border: 2px solid var(--black);
+      padding: 8px;
+      text-align: left;
+    }
+
+    th { background: var(--cyan); color: var(--black); font-weight: 900; }
+
+    .input-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    input {
+      flex: 1 1 180px;
+      min-width: 160px;
+      border: 2px solid var(--white);
+      background: var(--black);
+      color: var(--green);
+      padding: 10px 12px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 1rem;
+      outline: none;
+      box-shadow: 3px 3px 0 var(--black);
+    }
+
+    input::placeholder { color: #00aa00; }
+    input:focus { border-color: var(--yellow); background: #001100; }
+
+    button {
+      border: 2px solid var(--white);
+      padding: 10px 13px;
+      background: var(--yellow);
+      color: var(--black);
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--black);
+      text-transform: uppercase;
+      animation: button-blink 1.15s steps(2, end) infinite;
+    }
+
+    button.secondary {
+      background: var(--cyan);
+      color: var(--black);
+    }
+
+    button:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--black); }
+    button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    .debug-box {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .debug-box input {
+      flex: 0 1 120px;
+      min-width: 90px;
+      padding: 6px 8px;
+      font-size: .82rem;
+    }
+
+    .debug-box button {
+      padding: 6px 8px;
+      font-size: .78rem;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      min-height: 24px;
+      font-weight: 900;
+      animation: temple-blink 1.8s steps(2, end) infinite;
+    }
+
+    .feedback.good { color: var(--green); }
+    .feedback.bad { color: var(--red); }
+    .feedback.warn { color: var(--yellow); }
+
+    .hint {
+      display: none;
+      margin-top: 10px;
+      border: 2px dashed var(--yellow);
+      background: var(--black);
+      padding: 10px 12px;
+      color: var(--yellow);
+      animation: hint-flash 1.9s steps(2, end) infinite;
+    }
+
+    .progress {
+      height: 18px;
+      background: var(--black);
+      border: 2px solid var(--white);
+      overflow: hidden;
+      min-width: 160px;
+      box-shadow: 3px 3px 0 var(--black);
+    }
+
+    .progress > div {
+      height: 100%;
+      width: 0%;
+      background: repeating-linear-gradient(90deg, var(--green) 0 10px, var(--cyan) 10px 20px);
+      transition: width .2s steps(6);
+      animation: progress-stripes .65s steps(4, end) infinite;
+    }
+
+    .terminal {
+      background: var(--black);
+      border: 2px solid var(--green);
+      padding: 12px;
+      color: var(--green);
+      box-shadow: inset 0 0 0 2px #003300, 4px 4px 0 var(--black);
+      font-weight: 900;
+      animation: terminal-glow 1.3s steps(2, end) infinite;
+    }
+
+    .small { font-size: .9rem; color: var(--cyan); }
+    .hidden { display: none !important; }
+    .footer-note { margin-top: 28px; text-align: center; color: var(--cyan); font-size: .9rem; }
+
+    a { color: var(--yellow); }
+
+    .freeflower-link {
+      position: fixed;
+      top: 34px;
+      right: 14px;
+      z-index: 140;
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      background: var(--white);
+      border: 2px solid var(--black);
+      box-shadow: 3px 3px 0 var(--black);
+    }
+
+    .freeflower-link img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+      animation: freeflower-spin 7s linear infinite;
+    }
+
+    .freeflower-link:focus-visible {
+      outline: 3px solid var(--yellow);
+      outline-offset: 3px;
+    }
+
+    .meme-pop {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 220;
+      width: min(340px, calc(100vw - 36px));
+      max-height: min(58vh, 480px);
+      display: none;
+      padding: 8px;
+      border: 3px solid var(--yellow);
+      background: var(--white);
+      box-shadow: 8px 8px 0 var(--black);
+      cursor: pointer;
+      transform: rotate(-1deg);
+    }
+
+    .meme-pop.show {
+      display: block;
+      animation: meme-pop-in .18s steps(2, end), meme-shake .9s steps(2, end) infinite;
+    }
+
+    .meme-pop::before {
+      content: "MEME.EXE";
+      display: block;
+      margin: -8px -8px 8px;
+      padding: 4px 8px;
+      background: var(--yellow);
+      color: var(--black);
+      border-bottom: 3px solid var(--black);
+      font-weight: 900;
+    }
+
+    .meme-pop img {
+      display: block;
+      width: 100%;
+      max-height: calc(min(58vh, 480px) - 34px);
+      object-fit: contain;
+      background: var(--black);
+    }
+
+    @keyframes freeflower-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes button-blink {
+      0%, 48% { background: var(--yellow); color: var(--black); }
+      49%, 100% { background: var(--white); color: var(--blue); }
+    }
+
+    @keyframes meme-pop-in {
+      from { opacity: 0; transform: translate(12px, 12px) rotate(2deg) scale(.94); }
+      to { opacity: 1; transform: translate(0, 0) rotate(-1deg) scale(1); }
+    }
+
+    @keyframes meme-shake {
+      0%, 100% { filter: none; }
+      50% { filter: contrast(1.18) saturate(1.2); }
+    }
+
+    @keyframes temple-blink {
+      0%, 48% { filter: none; }
+      49%, 100% { filter: brightness(1.35); }
+    }
+
+    @keyframes status-crawl {
+      0% { text-indent: 0; }
+      50% { text-indent: 26px; }
+      100% { text-indent: 0; }
+    }
+
+    @keyframes crt-flicker {
+      0%, 100% { opacity: .38; transform: translateY(0); }
+      18% { opacity: .48; }
+      37% { opacity: .31; transform: translateY(1px); }
+      61% { opacity: .44; }
+      82% { opacity: .34; transform: translateY(-1px); }
+    }
+
+    @keyframes title-pop {
+      0%, 72% { color: var(--yellow); text-shadow: 2px 2px 0 var(--black); }
+      73%, 100% { color: var(--white); text-shadow: 2px 2px 0 var(--red); }
+    }
+
+    @keyframes border-flash {
+      0%, 74% { border-color: var(--white); }
+      75%, 100% { border-color: var(--cyan); }
+    }
+
+    @keyframes bar-invert {
+      0%, 84% { background: var(--white); color: var(--blue); }
+      85%, 100% { background: var(--yellow); color: var(--black); }
+    }
+
+    @keyframes green-pulse {
+      0%, 58% { color: var(--green); border-left-color: var(--yellow); }
+      59%, 100% { color: var(--cyan); border-left-color: var(--green); }
+    }
+
+    @keyframes badge-flash {
+      0%, 54% { transform: translate(0, 0); }
+      55%, 100% { transform: translate(1px, 0); }
+    }
+
+    @keyframes location-snap {
+      0%, 76% { background: var(--cyan); }
+      77%, 100% { background: var(--green); }
+    }
+
+    @keyframes hint-flash {
+      0%, 64% { border-color: var(--yellow); }
+      65%, 100% { border-color: var(--red); }
+    }
+
+    @keyframes progress-stripes {
+      from { background-position: 0 0; }
+      to { background-position: 20px 0; }
+    }
+
+    @keyframes terminal-glow {
+      0%, 50% { box-shadow: inset 0 0 0 2px #003300, 4px 4px 0 var(--black); }
+      51%, 100% { box-shadow: inset 0 0 0 2px var(--green), 4px 4px 0 var(--black); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .bar { grid-template-columns: 1fr; }
+      header { top: 24px; }
+      main { padding-top: 42px; }
+      .freeflower-link {
+        top: 32px;
+        right: 8px;
+        width: 44px;
+        height: 44px;
+      }
+      .freeflower-link img {
+        width: 38px;
+        height: 38px;
+      }
+      .meme-pop {
+        right: 10px;
+        bottom: 10px;
+        width: min(300px, calc(100vw - 20px));
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="freeflower-link" href="https://github.com/CyrilBlum/FreeFlower" target="_blank" rel="noopener" aria-label="FreeFlower Unterrichts-Repo öffnen" title="FreeFlower Unterrichts-Repo">
+    <img src="assets/freeflower.png" alt="FreeFlower" />
+  </a>
+  <div class="meme-pop" id="memePop" role="status" aria-live="polite" title="Klick zum Schliessen">
+    <img id="memeImage" src="assets/meme-prog-confused.jpg" alt="Programmier-Meme" />
+  </div>
+  <header>
+    <div class="bar">
+      <div>
+        <h1>LeeOS 4.0 // Escape from the Blue Screen</h1>
+        <div class="small">HolyC, a programming language not written by C. Blum</div>
+      </div>
+      <div class="pill"><span id="solvedCount">0</span>/7 Systeme repariert</div>
+      <div>
+        <div class="progress" aria-label="Fortschritt"><div id="progressBar"></div></div>
+        <div class="debug-box">
+          <input id="debugPassword" type="password" autocomplete="off" placeholder="DEBUG" />
+          <button onclick="activateDebug()">DBG</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>Story: Die Kantonsschule im Lee wurde gehackt</h2>
+      <p>
+        Es ist Freitag, 07:58 Uhr. Moodle hustet, der Beamer flackert, und auf dem Bildschirm steht:
+        <span class="mono">LEE-GPT-9000 HAS TAKEN CONTROL</span>. Die KI hat aus Stundenplänen, Prüfungen und WLAN-Logs
+        ein einziges, beleidigend selbstbewusstes Datenpaket gebaut.
+      </p>
+      <p>
+        Ihr Auftraggeber ist bereits im Stressmodus. Arbeiten Sie sich Raum für Raum durchs Lee, sammeln Sie die Splitter aus den Systemen
+        und bringen Sie den Haupteingang wieder online, bevor der Pausengong alles endgültig einfriert.
+      </p>
+      <div class="mission-line">AUFTRAG: Folgen Sie den Spuren. Das Gebäude antwortet nur auf saubere Rekonstruktion.</div>
+      <div class="grid">
+        <div class="card"><strong>Team:</strong><br>3–4 Personen pro Zugriff</div>
+        <div class="card"><strong>Zeitfenster:</strong><br>Bis der Gong alles einfriert</div>
+        <div class="card"><strong>Material:</strong><br>Browser, Papier, Kopf, keine Panik</div>
+        <div class="card"><strong>Terminal:</strong><br>Leerzeichen und Gross-/Kleinschreibung sind nachsichtig</div>
+      </div>
+      <div class="grid">
+        <div class="card"><strong>Lageplan:</strong><br>Informatikzimmer (103) -> Lehrerzimmer -> Treppenhaus -> Mediothek -> Serverraum -> Aula -> Mensa -> Haupteingang</div>
+        <div class="card"><strong>Merke:</strong><br>Manche Türen behalten mehr, als sie anzeigen.</div>
+      </div>
+    </section>
+
+    <section class="room" id="room1">
+      <div class="room-title">
+        <div><h2>Station 1: Informatikzimmer (103)</h2><div class="small">Thema: Programmieren, Listen, Dictionaries, Bubble Sort</div></div>
+        <div class="badge" id="badge1">offen</div>
+      </div>
+      <div class="content">
+        <div class="location">Aktueller Raum: Informatikzimmer (103)</div>
+        <p>Sie starten im Informatikzimmer 103. Auf dem Bildschirm neben der Tür zum Lehrerzimmer läuft ein Python-Skript mit sechs herausgebissenen Stellen.</p>
+        <pre class="python-code"><span class="py-var">daten</span> <span class="py-op">=</span> <span class="py-punc">[</span>
+    <span class="py-punc">{</span><span class="py-str">"station"</span><span class="py-punc">:</span> <span class="py-str">"K"</span><span class="py-punc">,</span> <span class="py-str">"messung"</span><span class="py-punc">:</span> <span class="py-punc">[</span><span class="py-num">4</span><span class="py-punc">,</span> <span class="py-num">2</span><span class="py-punc">,</span> <span class="py-num">1</span><span class="py-punc">]</span><span class="py-punc">,</span> <span class="py-str">"token"</span><span class="py-punc">:</span> <span class="py-str">"X"</span><span class="py-punc">}</span><span class="py-punc">,</span>
+    <span class="py-punc">{</span><span class="py-str">"station"</span><span class="py-punc">:</span> <span class="py-str">"L"</span><span class="py-punc">,</span> <span class="py-str">"messung"</span><span class="py-punc">:</span> <span class="py-punc">[</span><span class="py-num">1</span><span class="py-punc">,</span> <span class="py-num">1</span><span class="py-punc">,</span> <span class="py-num">2</span><span class="py-punc">]</span><span class="py-punc">,</span> <span class="py-str">"token"</span><span class="py-punc">:</span> <span class="py-str">"Q"</span><span class="py-punc">}</span><span class="py-punc">,</span>
+    <span class="py-punc">{</span><span class="py-str">"station"</span><span class="py-punc">:</span> <span class="py-str">"M"</span><span class="py-punc">,</span> <span class="py-str">"messung"</span><span class="py-punc">:</span> <span class="py-punc">[</span><span class="py-num">3</span><span class="py-punc">,</span> <span class="py-num">3</span><span class="py-punc">,</span> <span class="py-num">0</span><span class="py-punc">]</span><span class="py-punc">,</span> <span class="py-str">"token"</span><span class="py-punc">:</span> <span class="py-str">"P"</span><span class="py-punc">}</span><span class="py-punc">,</span>
+    <span class="py-punc">{</span><span class="py-str">"station"</span><span class="py-punc">:</span> <span class="py-str">"N"</span><span class="py-punc">,</span> <span class="py-str">"messung"</span><span class="py-punc">:</span> <span class="py-punc">[</span><span class="py-num">2</span><span class="py-punc">,</span> <span class="py-num">3</span><span class="py-punc">,</span> <span class="py-num">3</span><span class="py-punc">]</span><span class="py-punc">,</span> <span class="py-str">"token"</span><span class="py-punc">:</span> <span class="py-str">"7"</span><span class="py-punc">}</span>
+<span class="py-punc">]</span>
+
+<span class="py-var">i</span> <span class="py-op">=</span> <input class="code-input short" id="blankA" data-blank="A" autocomplete="off" aria-label="Lücke A" />
+<span class="py-key">while</span> <span class="py-var">i</span> <span class="py-op">&lt;</span> <span class="py-fn">len</span><span class="py-punc">(</span><span class="py-var">daten</span><span class="py-punc">)</span> <span class="py-op">-</span> <span class="py-num">1</span><span class="py-punc">:</span>
+    <span class="py-key">for</span> <span class="py-var">j</span> <span class="py-key">in</span> <span class="py-fn">range</span><span class="py-punc">(</span><span class="py-num">0</span><span class="py-punc">,</span> <span class="py-fn">len</span><span class="py-punc">(</span><span class="py-var">daten</span><span class="py-punc">)</span> <span class="py-op">-</span> <span class="py-num">1</span> <span class="py-op">-</span> <span class="py-var">i</span><span class="py-punc">)</span><span class="py-punc">:</span>
+        <span class="py-key">if</span> <span class="py-fn">sum</span><span class="py-punc">(</span><span class="py-var">daten</span><span class="py-punc">[</span><span class="py-var">j</span><span class="py-punc">]</span><span class="py-punc">[</span><span class="py-str">"messung"</span><span class="py-punc">]</span><span class="py-punc">)</span> <span class="py-op">&gt;</span> <span class="py-fn">sum</span><span class="py-punc">(</span><span class="py-var">daten</span><span class="py-punc">[</span><span class="py-var">j</span> <span class="py-op">+</span> <span class="py-num">1</span><span class="py-punc">]</span><span class="py-punc">[</span><span class="py-str">"messung"</span><span class="py-punc">]</span><span class="py-punc">)</span><span class="py-punc">:</span>
+            <span class="py-var">temp</span> <span class="py-op">=</span> <input class="code-input wide" id="blankB" data-blank="B" autocomplete="off" aria-label="Lücke B" />
+            <span class="py-var">daten</span><span class="py-punc">[</span><span class="py-var">j</span><span class="py-punc">]</span> <span class="py-op">=</span> <input class="code-input wide" id="blankC" data-blank="C" autocomplete="off" aria-label="Lücke C" />
+            <span class="py-var">daten</span><span class="py-punc">[</span><span class="py-var">j</span> <span class="py-op">+</span> <span class="py-num">1</span><span class="py-punc">]</span> <span class="py-op">=</span> <input class="code-input" id="blankD" data-blank="D" autocomplete="off" aria-label="Lücke D" />
+    <span class="py-var">i</span> <span class="py-op">+=</span> <input class="code-input short" id="blankE" data-blank="E" autocomplete="off" aria-label="Lücke E" />
+
+<span class="py-var">code</span> <span class="py-op">=</span> <span class="py-str">""</span>
+<span class="py-key">for</span> <span class="py-var">eintrag</span> <span class="py-key">in</span> <span class="py-var">daten</span><span class="py-punc">:</span>
+    <span class="py-var">code</span> <span class="py-op">+=</span> <span class="py-var">eintrag</span><span class="py-punc">[</span><span class="py-str">"</span><input class="code-input" id="blankF" data-blank="F" autocomplete="off" aria-label="Lücke F" /><span class="py-str">"</span><span class="py-punc">]</span>
+
+<span class="py-fn">print</span><span class="py-punc">(</span><span class="py-var">code</span><span class="py-punc">)</span></pre>
+        <div class="blank-panel">
+          <div class="input-row">
+            <button class="secondary" onclick="checkBlanks(true)">Lücken prüfen</button>
+            <button class="secondary" onclick="showBlankHints()">Lücken-Hinweise</button>
+          </div>
+          <div class="blank-status" id="blankStatus">
+            <span id="blankStatusA">A: offen</span>
+            <span id="blankStatusB">B: offen</span>
+            <span id="blankStatusC">C: offen</span>
+            <span id="blankStatusD">D: offen</span>
+            <span id="blankStatusE">E: offen</span>
+            <span id="blankStatusF">F: offen</span>
+          </div>
+          <div class="hint" id="blankHints">A und E steuern die Schleife. B, C und D bilden den Tausch mit einer temporären Variable. F ist der Schlüssel im Dictionary, aus dem die Zeichen gesammelt werden.</div>
+        </div>
+        <p>Das Terminal unter dem Skript wartet auf die Ausgabe von <span class="mono">print(code)</span>.</p>
+        <div class="input-row">
+          <input id="answer1" autocomplete="off" placeholder="Ausgabe eingeben" />
+          <button onclick="check(1)">Prüfen</button>
+          <button class="secondary" onclick="hint(1)">Hinweis</button>
+        </div>
+        <div class="hint" id="hint1">Bubble Sort vergleicht Nachbarn. <span class="mono">i</span> startet beim ersten Durchlauf und wird nach jeder Runde um 1 erhöht. Beim Tausch wird zuerst der linke Eintrag zwischengespeichert.</div>
+        <div class="feedback" id="feedback1"></div>
+      </div>
+    </section>
+
+    <section class="room locked" id="room2">
+      <div class="room-title">
+        <div><h2>Station 2: Lehrerzimmer</h2><div class="small">Thema: Netzwerke, TCP, Protokolle</div></div>
+        <div class="badge" id="badge2">gesperrt</div>
+      </div>
+      <div class="content">
+        <div class="location">Neuer Raum: Lehrerzimmer</div>
+        <p>Im Lehrerzimmer steckt ein alter Laptop am Netzwerk. Auf dem Display ist der Mitschnitt der Türsteuerung zu sehen, kurz bevor der Weg ins Treppenhaus freigegeben wird:</p>
+        <table>
+          <thead><tr><th>Nr.</th><th>Source</th><th>Destination</th><th>Protocol</th><th>Info</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>10.42.0.11</td><td>10.42.0.99</td><td>TCP</td><td>SYN</td></tr>
+            <tr><td>2</td><td>10.42.0.99</td><td>10.42.0.11</td><td>TCP</td><td>SYN, ACK</td></tr>
+            <tr><td>3</td><td>10.42.0.11</td><td>10.42.0.99</td><td>TCP</td><td>ACK</td></tr>
+            <tr><td>4</td><td>10.42.0.11</td><td>10.42.0.99</td><td>HTTP</td><td>GET /moodle/noten</td></tr>
+          </tbody>
+        </table>
+        <p>Welche drei TCP-Flags bilden direkt vor dem HTTP-Zugriff die Verbindung?</p>
+        <div class="input-row">
+          <input id="answer2" autocomplete="off" placeholder="Antwort eingeben" />
+          <button onclick="check(2)">Prüfen</button>
+          <button class="secondary" onclick="hint(2)">Hinweis</button>
+        </div>
+        <div class="hint" id="hint2">
+          Lesen Sie nur die TCP-Zeilen vor dem HTTP-GET. Beim zweiten Paket kommen zwei Flags gleichzeitig.
+          <img class="hint-image" src="assets/tcp_handshake_hint.png" alt="Drei-Wege-Handshake im TCP-Protokoll" />
+        </div>
+        <div class="feedback" id="feedback2"></div>
+      </div>
+    </section>
+
+    <section class="room locked" id="room3">
+      <div class="room-title">
+        <div><h2>Station 3: Treppenhaus</h2><div class="small">Thema: Caesar, Häufigkeitsanalyse</div></div>
+        <div class="badge" id="badge3">gesperrt</div>
+      </div>
+      <div class="content">
+        <div class="location">Neuer Raum: Treppenhaus</div>
+        <p>Sie stehen im Treppenhaus vor der Tür der Mediothek. Neben dem Türgriff klebt eine Caesar-Spur. Die Verschiebung ist egal; gesucht ist der Buchstabe, den man bei deutschen Texten am ehesten als häufigsten Klartextbuchstaben erwarten würde.</p>
+        <div class="media-panel cipher-wheel">
+          <div>Alphabet</div><div class="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+          <div>Caesar +4</div><div class="alphabet">EFGHIJKLMNOPQRSTUVWXYZABCD</div>
+        </div>
+        <p>Welcher Buchstabe kommt in deutschen Texten typischerweise am häufigsten vor?</p>
+        <div class="input-row">
+          <input id="answer3" autocomplete="off" placeholder="Antwort eingeben" />
+          <button onclick="check(3)">Prüfen</button>
+          <button class="secondary" onclick="hint(3)">Hinweis</button>
+        </div>
+        <div class="hint" id="hint3">Nicht im Caesar-Alphabet zählen. Es geht um die deutsche Sprache.</div>
+        <div class="feedback" id="feedback3"></div>
+      </div>
+    </section>
+
+    <section class="room locked" id="room4">
+      <div class="room-title">
+        <div><h2>Station 4: Mediothek</h2><div class="small">Thema: Vigenère-Verschlüsselung</div></div>
+        <div class="badge" id="badge4">gesperrt</div>
+      </div>
+      <div class="content">
+        <div class="location">Neuer Raum: Mediothek</div>
+        <p>Die Mediothek öffnet sich. Im digitalen Katalog blinkt ein gesperrter Eintrag, darunter steckt ein Vigenère-Zettel. Der Schlüssel besteht aus den drei Splittern, die Sie bis hierhin gesammelt haben.</p>
+        <pre>Schlüssel:  ? ? ?
+Geheimtext: DXENOSGIVQPSH</pre>
+        <div class="media-panel" id="vigenerePanel">
+          <div class="small">Vigenère-Tabelle: Spaltentitel = Key, Zeilentitel = Plain.</div>
+          <div id="vigenereTable"></div>
+        </div>
+        <p>Welches Wort öffnet den gesperrten Katalogeintrag?</p>
+        <div class="input-row">
+          <input id="answer4" autocomplete="off" placeholder="Antwort eingeben" />
+          <button onclick="check(4)">Prüfen</button>
+          <button class="secondary" onclick="hint(4)">Hinweis</button>
+        </div>
+        <div class="hint" id="hint4">Nutzen Sie die ersten drei Splitter als Schlüssel und wiederholen Sie ihn unter dem ganzen Geheimtext.</div>
+        <div class="feedback" id="feedback4"></div>
+      </div>
+    </section>
+
+    <section class="room locked" id="room5">
+      <div class="room-title">
+        <div><h2>Station 5: Serverraum</h2><div class="small">Thema: Selbstkorrigierende Codes, RAID-4, XOR-Parität</div></div>
+        <div class="badge" id="badge5">gesperrt</div>
+      </div>
+      <div class="content">
+        <div class="location">Neuer Raum: Serverraum</div>
+        <p>Hinter der Mediothekstür liegt der Serverraum. Ein RAID-4-Verbund blinkt hektisch; ohne Rekonstruktion bleibt die Tür zur Aula verriegelt. Eine Datenfestplatte ist ausgefallen: <strong>Disk 1</strong>. Pro Zeile gilt: Datenbits XOR Paritätsbit ergibt <span class="mono">0</span>.</p>
+        <table class="mono">
+          <thead><tr><th class="raid-index">Zeile</th><th>Disk 0</th><th>⚠️ Disk 1</th><th>Disk 2</th><th>Disk 3</th></tr></thead>
+          <tbody>
+            <tr><td class="raid-index">1</td><td>1</td><td><input class="raid-input" id="raid1" data-raid="1" autocomplete="off" maxlength="1" aria-label="RAID-Zeile 1" /></td><td>0</td><td>1</td></tr>
+            <tr><td class="raid-index">2</td><td>1</td><td><input class="raid-input" id="raid2" data-raid="2" autocomplete="off" maxlength="1" aria-label="RAID-Zeile 2" /></td><td>1</td><td>1</td></tr>
+            <tr><td class="raid-index">3</td><td>0</td><td><input class="raid-input" id="raid3" data-raid="3" autocomplete="off" maxlength="1" aria-label="RAID-Zeile 3" /></td><td>1</td><td>0</td></tr>
+            <tr><td class="raid-index">4</td><td>1</td><td><input class="raid-input" id="raid4" data-raid="4" autocomplete="off" maxlength="1" aria-label="RAID-Zeile 4" /></td><td>0</td><td>0</td></tr>
+            <tr><td class="raid-index">5</td><td>0</td><td><input class="raid-input" id="raid5" data-raid="5" autocomplete="off" maxlength="1" aria-label="RAID-Zeile 5" /></td><td>0</td><td>1</td></tr>
+            <tr><td class="raid-index">6</td><td>1</td><td><input class="raid-input" id="raid6" data-raid="6" autocomplete="off" maxlength="1" aria-label="RAID-Zeile 6" /></td><td>1</td><td>0</td></tr>
+            <tr><td class="raid-index">7</td><td>0</td><td><input class="raid-input" id="raid7" data-raid="7" autocomplete="off" maxlength="1" aria-label="RAID-Zeile 7" /></td><td>1</td><td>1</td></tr>
+            <tr><td class="raid-index">8</td><td>1</td><td><input class="raid-input" id="raid8" data-raid="8" autocomplete="off" maxlength="1" aria-label="RAID-Zeile 8" /></td><td>0</td><td>1</td></tr>
+            <tr><td class="raid-index">9</td><td>0</td><td><input class="raid-input" id="raid9" data-raid="9" autocomplete="off" maxlength="1" aria-label="RAID-Zeile 9" /></td><td>0</td><td>0</td></tr>
+          </tbody>
+        </table>
+        <p>Die ausgefallene Datenplatte braucht ihre Bits zurück.</p>
+        <div class="raid-reveal" aria-label="RAID-Bildrekonstruktion">
+          <div class="raid-slice s1" id="raidSlice1">1</div>
+          <div class="raid-slice s2" id="raidSlice2">2</div>
+          <div class="raid-slice s3" id="raidSlice3">3</div>
+          <div class="raid-slice s4" id="raidSlice4">4</div>
+          <div class="raid-slice s5" id="raidSlice5">5</div>
+          <div class="raid-slice s6" id="raidSlice6">6</div>
+          <div class="raid-slice s7" id="raidSlice7">7</div>
+          <div class="raid-slice s8" id="raidSlice8">8</div>
+          <div class="raid-slice s9" id="raidSlice9">9</div>
+        </div>
+        <div class="input-row">
+          <button onclick="checkRaidRows(true)">Rekonstruktion prüfen</button>
+          <button class="secondary" onclick="hint(5)">Hinweis</button>
+        </div>
+        <div id="raidGameQuestion" class="hidden">
+          <p>Das Bild ist wiederhergestellt. Was ist das Lieblingsspiel von Herr Blum?</p>
+          <div class="input-row">
+            <input id="raidGameAnswer" autocomplete="off" placeholder="Lösungswort eingeben" />
+            <button onclick="checkRaidGame()">Spiel prüfen</button>
+          </div>
+        </div>
+        <div class="hint" id="hint5">
+          <p><strong>RAID-Parität statt Spiegelung</strong></p>
+          <p>
+            RAID 4, 5 und 6 nutzen für die Datensicherheit statt Mirroring, also Spiegelung der Daten,
+            einen effizienteren Ansatz: Daten werden über mehrere Laufwerke verteilt und durch Paritätsbits abgesichert.
+          </p>
+          <p>
+            RAID 5 verwendet ein einzelnes Paritätsbit und verteilt dieses über verschiedene Festplatten, sodass jeder
+            Striping-Block <span class="mono">A1 A2 A3 ...</span> genau ein Paritätsbit <span class="mono">Ap</span> besitzt.
+            Bei RAID 4 liegt diese Parität auf einer festen Paritätsdisk.
+          </p>
+          <p class="mono">A1 XOR A2 XOR A3 XOR Ap = 0</p>
+          <img class="hint-image" src="assets/raid4_hint.png" alt="RAID 4 mit Datenblöcken und fester Paritätsdisk" />
+        </div>
+        <div class="feedback" id="feedback5"></div>
+      </div>
+    </section>
+
+    <section class="room locked" id="room6">
+      <div class="room-title">
+        <div><h2>Station 6: Aula</h2><div class="small">Thema: True Positives, False Negatives, Sensitivität</div></div>
+        <div class="badge" id="badge6">gesperrt</div>
+      </div>
+      <div class="content">
+        <div class="location">Neuer Raum: Aula</div>
+        <p>In der Aula läuft auf der Leinwand eine KI-Prüfungs-Triage. Die Projektionswand rührt sich erst, wenn die Kennzahl stimmt:</p>
+        <table>
+          <thead><tr><th></th><th>Tatsächlich bestanden</th><th>Tatsächlich nicht bestanden</th></tr></thead>
+          <tbody>
+            <tr><th>KI sagt bestanden</th><td>72</td><td>18</td></tr>
+            <tr><th>KI sagt nicht bestanden</th><td>8</td><td>102</td></tr>
+          </tbody>
+        </table>
+        <p>Berechnen Sie die Sensitivität in Prozent. Runden Sie auf eine ganze Zahl und geben Sie nur die Zahl ein.</p>
+        <div class="input-row">
+          <input id="answer6" autocomplete="off" placeholder="Antwort eingeben" />
+          <button onclick="check(6)">Prüfen</button>
+          <button class="secondary" onclick="hint(6)">Hinweis</button>
+        </div>
+        <div class="hint" id="hint6">Sensitivität = True Positives / (True Positives + False Negatives).</div>
+        <div class="feedback" id="feedback6"></div>
+      </div>
+    </section>
+
+    <section class="room locked" id="room7">
+      <div class="room-title">
+        <div><h2>Station 7: Mensa</h2><div class="small">Thema: Algorithmen, Big-O, Humor</div></div>
+        <div class="badge" id="badge7">gesperrt</div>
+      </div>
+      <div class="content">
+        <div class="location">Neuer Raum: Mensa</div>
+        <p>In der Mensa steht das Moodle-Orakel zwischen Tablettstapel und Kaffeemaschine. Es gibt den Rückweg zum Haupteingang nur frei, wenn Sie den Algorithmus richtig einschätzen. Für diesen Zugriff gilt <span class="mono">n = 42</span>:</p>
+        <pre>n = 42
+
+for i in range(n):
+    for j in range(n):
+        for k in range(3):
+            print("LeeOS reparieren")</pre>
+        <p>Wie oft erscheint die Meldung insgesamt, und welche asymptotische Laufzeit hat der Algorithmus?</p>
+        <div class="input-row">
+          <input id="answer7count" autocomplete="off" placeholder="Anzahl" />
+          <input id="answer7runtime" autocomplete="off" placeholder="Laufzeit" />
+          <button onclick="check(7)">Prüfen</button>
+          <button class="secondary" onclick="hint(7)">Hinweis</button>
+        </div>
+        <div class="hint" id="hint7">
+          <p>
+            Big-O beschreibt, wie die Laufzeit mit der Eingabegrösse wächst. Dabei zählt nur der dominante Term:
+            konstante Faktoren werden weggelassen.
+          </p>
+          <ul>
+            <li><span class="mono">O(1)</span>: konstant</li>
+            <li><span class="mono">O(n)</span>: linear, eine Schleife über <span class="mono">n</span></li>
+            <li><span class="mono">O(n^2)</span>: quadratisch, zwei verschachtelte Schleifen über <span class="mono">n</span></li>
+            <li><span class="mono">O(n^3)</span>: kubisch, drei wirklich von <span class="mono">n</span> abhängige Schleifen</li>
+          </ul>
+          <p>Der dritte Loop läuft hier immer genau dreimal.</p>
+        </div>
+        <div class="feedback" id="feedback7"></div>
+      </div>
+    </section>
+
+    <section class="finale locked" id="finale">
+      <div class="room-title">
+        <div><h2>Finale: Haupteingang</h2><div class="small">Letzter Zugriff auf LeeOS</div></div>
+        <div class="badge" id="badgeFinal">gesperrt</div>
+      </div>
+      <div class="content">
+        <div class="location">Letzter Raum: Haupteingang</div>
+        <div class="terminal">
+          <div>&gt; SYSTEMSTATUS: instabil</div>
+          <div>&gt; ROOT-TERMINAL: geschlossen</div>
+          <div>&gt; EINGABE ERWARTET</div>
+          <span id="fragments" class="mono hidden"></span>
+        </div>
+        <p>Sie sind wieder am Haupteingang. Das Terminal neben der Ausgangstür nimmt nur eine einzige Sequenz an. Was Sie unterwegs gesehen haben, muss jetzt reichen.</p>
+        <div class="input-row">
+          <input id="finalAnswer" autocomplete="off" placeholder="Sequenz" />
+          <button onclick="checkFinal()">LeeOS reparieren</button>
+        </div>
+        <div class="feedback" id="finalFeedback"></div>
+        <div id="win" class="hidden">
+          <h3>System restored.</h3>
+          <p>
+            LEE-GPT-9000 wurde in den Ferienmodus versetzt. Moodle läuft wieder, das WLAN atmet, die Zeugnisse sind gerettet,
+            und der Auftraggeber tut so, als sei diese Eskalation natürlich Teil des Unterrichtsdesigns gewesen.
+          </p>
+          <p><strong>Abschlussfrage für die Klasse:</strong> Welches Informatik-Konzept aus diesem Jahr wird Ihnen vermutlich am längsten bleiben?</p>
+          <p>
+            Ich wünsche Ihnen alles Beste für Ihre Zukunft. Für Fragen können Sie mich jederzeit gerne kontaktieren:
+            <a href="mailto:cyril.blum@edu.zh.ch">cyril.blum@edu.zh.ch</a>.
+          </p>
+          <p>
+            LinkedIn: <a href="https://www.linkedin.com/in/cvblum/" target="_blank" rel="noopener noreferrer">linkedin.com/in/cvblum</a><br>
+            Webseite: <a href="https://cblum.ch/" target="_blank" rel="noopener noreferrer">cblum.ch</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">Anpassbar: Namen, Insider, Rätselcodes und Story lassen sich direkt im HTML/JavaScript ändern.</p>
+  </main>
+
+  <script>
+    const rooms = {
+      1: { answers: ["QPX7"], fragment: "L", solvedText: "Das Skript gibt einen Türimpuls. Das Lehrerzimmer öffnet sich. Splitter: L" },
+      2: { answers: ["SYN-SYNACK-ACK", "SYN/SYNACK/ACK", "SYNSYNACKACK"], fragment: "E", solvedText: "Die Verbindung steht. Die Treppenhaustür springt auf. Splitter: E" },
+      3: { answers: ["E"], fragment: "E", solvedText: "Der Buchstabe passt. Die Tür der Mediothek klickt auf. Splitter: E" },
+      4: { answers: ["STACKOVERFLOW"], fragment: "S", solvedText: "Der Katalog entsperrt den Nebengang. Der Serverraum ist frei. Splitter: S" },
+      5: { answers: [], fragment: "T", solvedText: "Der RAID-Verbund ist wieder vollständig. Die Aula leuchtet im Lageplan auf. Splitter: T" },
+      6: { answers: ["90", "90%", "90.0", "90.0%"], fragment: "2", solvedText: "Die Leinwand fährt hoch. Die Mensa ist offen. Splitter: 2" },
+      7: { answers: [], fragment: "4", solvedText: "Das Orakel nickt. Der Weg zurück zum Haupteingang ist frei. Splitter: 4" }
+    };
+
+    const storageKey = "leeEscapeStateV7";
+    const state = JSON.parse(localStorage.getItem(storageKey) || "{}");
+    const solved = new Set(state.solved || []);
+    let debugUnlocked = state.debugUnlocked || false;
+    const blankSolutions = {
+      A: { answers: ["0"], hint: "Starten Sie beim ersten Durchlauf." },
+      B: { answers: ["DATEN[J]"], hint: "Speichern Sie zuerst den linken Eintrag." },
+      C: { answers: ["DATEN[J+1]", "DATEN[J + 1]"], hint: "Der rechte Nachbar wandert nach links." },
+      D: { answers: ["TEMP"], hint: "Der zwischengespeicherte linke Eintrag wandert nach rechts." },
+      E: { answers: ["1"], hint: "Nach jeder Runde kommt genau ein Durchlauf dazu." },
+      F: { answers: ["TOKEN"], hint: "Gesammelt werden die Zeichen aus dem passenden Dictionary-Schlüssel." }
+    };
+    const raidSolutions = {
+      1: "0",
+      2: "1",
+      3: "1",
+      4: "1",
+      5: "1",
+      6: "0",
+      7: "0",
+      8: "0",
+      9: "0"
+    };
+    const memeImages = [
+      "assets/meme-prog-comment.jpg",
+      "assets/meme-prog-confused.jpg",
+      "assets/meme-prog-make-it-nice.jpeg",
+      "assets/meme-prog-packing-cubes.jpg",
+      "assets/meme-sandwich.jpeg",
+      "assets/meme-tram-sbb.jpeg",
+      "assets/meme-el-tony-mate-ginger.png",
+      "assets/meme-params-which.png",
+      "assets/meme-prog-8-squares.png"
+    ];
+    let memeTimer = null;
+
+    function normalise(s) {
+      return (s || "")
+        .toUpperCase()
+        .replaceAll("Ä", "AE")
+        .replaceAll("Ö", "OE")
+        .replaceAll("Ü", "UE")
+        .replace(/[^A-Z0-9]/g, "")
+        .trim();
+    }
+
+    function normaliseCode(s) {
+      return (s || "")
+        .toUpperCase()
+        .replaceAll("Ä", "AE")
+        .replaceAll("Ö", "OE")
+        .replaceAll("Ü", "UE")
+        .replace(/\s+/g, "")
+        .trim();
+    }
+
+    function save() {
+      localStorage.setItem(storageKey, JSON.stringify({ solved: [...solved], debugUnlocked }));
+    }
+
+    function showMeme() {
+      const pop = document.getElementById("memePop");
+      const img = document.getElementById("memeImage");
+      if (!pop || !img) return;
+      const next = memeImages[Math.floor(Math.random() * memeImages.length)];
+      img.src = next;
+      pop.classList.remove("show");
+      void pop.offsetWidth;
+      pop.classList.add("show");
+      clearTimeout(memeTimer);
+      memeTimer = setTimeout(() => pop.classList.remove("show"), 2600);
+    }
+
+    function activateDebug() {
+      const input = document.getElementById("debugPassword");
+      const value = normalise(input.value);
+      if (value === "BLUMDEBUG" || value === "DEBUG") {
+        debugUnlocked = true;
+        input.value = "";
+        input.placeholder = "DEBUG AKTIV";
+        save();
+        update();
+      } else {
+        input.value = "";
+        input.placeholder = "FALSCH";
+      }
+    }
+
+    function buildVigenereTable() {
+      const target = document.getElementById("vigenereTable");
+      if (!target) return;
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let html = '<table class="vigenere-table mono"><thead><tr><th>Plain ↓ / Key →</th>';
+      for (const letter of alphabet) html += "<th>" + letter + "</th>";
+      html += "</tr></thead><tbody>";
+      for (let plain = 0; plain < alphabet.length; plain++) {
+        html += "<tr><th>" + alphabet[plain] + "</th>";
+        for (let key = 0; key < alphabet.length; key++) {
+          html += "<td>" + alphabet[(plain + key) % alphabet.length] + "</td>";
+        }
+        html += "</tr>";
+      }
+      html += "</tbody></table>";
+      target.innerHTML = html;
+    }
+
+    function checkBlanks(showHints = false) {
+      let allGood = true;
+      for (const key of Object.keys(blankSolutions)) {
+        const input = document.getElementById("blank" + key);
+        const status = document.getElementById("blankStatus" + key);
+        const answer = normaliseCode(input.value);
+        const valid = blankSolutions[key].answers.map(normaliseCode).includes(answer);
+        const empty = answer.length === 0;
+
+        input.classList.toggle("ok", valid);
+        input.classList.toggle("nope", !valid && !empty);
+        status.className = valid ? "ok" : (!empty ? "nope" : "");
+        status.textContent = key + ": " + (valid ? "richtig" : (showHints ? blankSolutions[key].hint : "offen"));
+        if (!valid) allGood = false;
+      }
+      return allGood;
+    }
+
+    function showBlankHints() {
+      document.getElementById("blankHints").style.display = "block";
+      checkBlanks(true);
+    }
+
+    function checkRaidRows(showFeedback = false) {
+      let correct = 0;
+      for (const row of Object.keys(raidSolutions)) {
+        const input = document.getElementById("raid" + row);
+        const slice = document.getElementById("raidSlice" + row);
+        if (!input || !slice) continue;
+        const answer = (input.value || "").trim();
+        const valid = answer === raidSolutions[row];
+        const empty = answer.length === 0;
+
+        input.classList.remove("ok", "nope");
+        slice.classList.toggle("revealed", valid);
+        if (valid) correct += 1;
+      }
+
+      const feedback = document.getElementById("feedback5");
+      const question = document.getElementById("raidGameQuestion");
+      if (correct === Object.keys(raidSolutions).length) {
+        if (question) question.classList.remove("hidden");
+        if (showFeedback && !solved.has(5)) {
+          feedback.className = "feedback warn";
+          feedback.textContent = "9/9 Zeilen rekonstruiert. Auf dem Monitor erscheint eine neue Frage.";
+        }
+        return true;
+      }
+
+      if (question) question.classList.add("hidden");
+      if (showFeedback) {
+        feedback.className = "feedback warn";
+        feedback.textContent = correct + "/9 Zeilen rekonstruiert.";
+      }
+      return false;
+    }
+
+    function checkRaidGame() {
+      const feedback = document.getElementById("feedback5");
+      const answer = normalise(document.getElementById("raidGameAnswer").value);
+      if (!checkRaidRows(true)) return;
+
+      if (answer === "GTA") {
+        solved.add(5);
+        feedback.className = "feedback good";
+        feedback.textContent = rooms[5].solvedText;
+        save();
+        update();
+      } else {
+        feedback.className = "feedback bad";
+        feedback.textContent = "Das Bild ist rekonstruiert, aber das Spiel stimmt noch nicht.";
+      }
+    }
+
+    function check(n) {
+      const input = document.getElementById("answer" + n);
+      const feedback = document.getElementById("feedback" + n);
+      if (n === 5) {
+        checkRaidRows(true);
+        return;
+      }
+      if (n === 7) {
+        checkBigO();
+        return;
+      }
+      const answer = normalise(input.value);
+      const valid = rooms[n].answers.map(normalise).includes(answer);
+
+      if (n === 1 && !checkBlanks(true)) {
+        feedback.className = "feedback warn";
+        feedback.textContent = "Das Skript ist noch beschädigt.";
+        return;
+      }
+
+      if (valid) {
+        solved.add(n);
+        feedback.className = "feedback good";
+        feedback.textContent = rooms[n].solvedText;
+        save();
+        update();
+      } else {
+        feedback.className = "feedback bad";
+        feedback.textContent = "Noch nicht. Irgendwo stimmt die Spur nicht.";
+      }
+    }
+
+    function hint(n) {
+      document.getElementById("hint" + n).style.display = "block";
+    }
+
+    function normaliseRuntime(s) {
+      return normalise(s).replace("²", "2");
+    }
+
+    function checkBigO() {
+      const feedback = document.getElementById("feedback7");
+      const count = normalise(document.getElementById("answer7count").value);
+      const runtime = normaliseRuntime(document.getElementById("answer7runtime").value);
+      const validCounts = ["5292", "5'292", "5 292"].map(normalise);
+      const validRuntimes = ["O(N^2)", "O(N²)", "ON2", "N2", "O N2", "O(N*N)"].map(normaliseRuntime);
+
+      if (validCounts.includes(count) && validRuntimes.includes(runtime)) {
+        solved.add(7);
+        feedback.className = "feedback good";
+        feedback.textContent = rooms[7].solvedText;
+        save();
+        update();
+      } else {
+        feedback.className = "feedback bad";
+        feedback.textContent = "Das Orakel bleibt still.";
+      }
+    }
+
+    function update() {
+      for (let i = 1; i <= 7; i++) {
+        const room = document.getElementById("room" + i);
+        const badge = document.getElementById("badge" + i);
+        const unlocked = debugUnlocked || i === 1 || solved.has(i - 1);
+        room.classList.toggle("locked", !unlocked);
+        room.classList.toggle("solved", solved.has(i));
+        badge.textContent = solved.has(i) ? "gelöst" : (debugUnlocked && !solved.has(i) ? "debug" : (unlocked ? "offen" : "gesperrt"));
+      }
+
+      const count = solved.size;
+      document.getElementById("solvedCount").textContent = debugUnlocked ? "DEBUG" : count;
+      document.getElementById("progressBar").style.width = (debugUnlocked ? 100 : (count / 7 * 100)) + "%";
+      document.getElementById("fragments").textContent = [...solved].sort((a,b) => a-b).map(i => rooms[i].fragment).join(" ");
+
+      const finale = document.getElementById("finale");
+      const badgeFinal = document.getElementById("badgeFinal");
+      const ready = debugUnlocked || count === 7;
+      finale.classList.toggle("locked", !ready);
+      badgeFinal.textContent = ready ? (debugUnlocked && count < 7 ? "debug" : "offen") : "gesperrt";
+      const raidDone = checkRaidRows(false);
+      const question = document.getElementById("raidGameQuestion");
+      if (question) question.classList.toggle("hidden", !raidDone);
+    }
+
+    function checkFinal() {
+      const feedback = document.getElementById("finalFeedback");
+      const answer = normalise(document.getElementById("finalAnswer").value);
+      if (answer === "LEEST24") {
+        feedback.className = "feedback good";
+        feedback.textContent = "Sequenz akzeptiert.";
+        document.getElementById("win").classList.remove("hidden");
+      } else {
+        feedback.className = "feedback bad";
+        feedback.textContent = "Falsche Sequenz. Das Terminal bleibt zu.";
+      }
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        const active = document.activeElement;
+        if (!active || !active.id) return;
+        if (active.id === "debugPassword") {
+          activateDebug();
+          return;
+        }
+        if (active.dataset && active.dataset.blank) {
+          checkBlanks(true);
+          return;
+        }
+        if (active.dataset && active.dataset.raid) {
+          checkRaidRows(true);
+          return;
+        }
+        if (active.id === "raidGameAnswer") checkRaidGame();
+        if (active.id === "answer7count" || active.id === "answer7runtime") {
+          checkBigO();
+          return;
+        }
+        const m = active.id.match(/^answer([1-6])$/);
+        if (m) check(Number(m[1]));
+        if (active.id === "finalAnswer") checkFinal();
+      }
+    });
+
+    document.querySelectorAll("[data-blank]").forEach(input => {
+      input.addEventListener("input", () => checkBlanks(false));
+    });
+
+    document.querySelectorAll("[data-raid]").forEach(input => {
+      input.addEventListener("input", () => checkRaidRows(false));
+    });
+
+    document.querySelectorAll("button").forEach(button => {
+      button.addEventListener("click", showMeme);
+    });
+
+    document.getElementById("memePop").addEventListener("click", () => {
+      clearTimeout(memeTimer);
+      document.getElementById("memePop").classList.remove("show");
+    });
+
+    buildVigenereTable();
+    update();
+  </script>
+</body>
+</html>
