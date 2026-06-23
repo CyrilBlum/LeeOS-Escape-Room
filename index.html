@@ -496,6 +496,11 @@
       font-size: .78rem;
     }
 
+    .debug-box button.reset {
+      background: var(--red);
+      color: var(--white);
+    }
+
     .feedback {
       margin-top: 10px;
       min-height: 24px;
@@ -1155,6 +1160,7 @@
         <div class="debug-box">
           <input id="debugPassword" type="password" autocomplete="off" placeholder="DEBUG" />
           <button onclick="activateDebug()">DBG</button>
+          <button class="reset" onclick="resetGame()">RESET</button>
         </div>
       </div>
     </div>
@@ -1657,6 +1663,12 @@ for i in range(n):
 
     function save() {
       localStorage.setItem(storageKey, JSON.stringify({ solved: [...solved], debugUnlocked }));
+    }
+
+    function resetGame() {
+      localStorage.removeItem(storageKey);
+      jukeboxAudio.pause();
+      window.location.reload();
     }
 
     function showMeme(requireClose = false) {
