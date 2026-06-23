@@ -121,7 +121,7 @@
     main {
       max-width: 1180px;
       margin: 0 auto;
-      padding: 52px 18px 60px;
+      padding: 52px 18px 190px;
     }
 
     .hero, .room, .finale {
@@ -717,7 +717,7 @@
     .meme-window {
       position: fixed;
       right: calc(18px + var(--stack-offset, 0px));
-      bottom: calc(18px + var(--stack-offset, 0px));
+      bottom: calc(150px + var(--stack-offset, 0px));
       z-index: var(--stack-z, 240);
       width: min(340px, calc(100vw - 36px));
       max-height: min(58vh, 480px);
@@ -766,12 +766,18 @@
     }
 
     .jukebox {
+      position: fixed;
+      left: 50%;
+      right: auto;
+      bottom: 14px;
+      z-index: 360;
+      width: min(980px, calc(100vw - 28px));
       border: 2px solid var(--white);
       background: var(--black);
       box-shadow: 8px 8px 0 var(--black);
-      margin: 28px 0 10px;
+      margin: 0;
       padding: 0 14px 14px;
-      position: relative;
+      transform: translateX(-50%);
     }
 
     .jukebox::before {
@@ -816,6 +822,86 @@
       color: var(--green);
       font-weight: 900;
       min-height: 20px;
+    }
+
+    .win-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(0, 0, 68, .92);
+    }
+
+    .win-overlay.show {
+      display: grid;
+    }
+
+    .win-screen {
+      width: min(860px, calc(100vw - 32px));
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+      border: 4px solid var(--yellow);
+      background: var(--black);
+      box-shadow: 12px 12px 0 var(--black);
+      text-align: center;
+    }
+
+    .win-screen::before {
+      content: ":: SYSTEM_RESTORED / YOU_HAVE_WON ::"; 
+      display: block;
+      padding: 6px 10px;
+      background: var(--yellow);
+      color: var(--black);
+      border-bottom: 4px solid var(--white);
+      font-weight: 900;
+    }
+
+    .win-screen h2 {
+      margin: 16px 14px 10px;
+      font-size: clamp(2rem, 7vw, 4.5rem);
+      color: var(--green);
+      text-shadow: 4px 4px 0 var(--blue);
+    }
+
+    .win-screen img {
+      display: block;
+      width: min(100%, 720px);
+      height: auto;
+      max-height: min(42vh, 420px);
+      object-fit: contain;
+      margin: 0 auto 16px;
+      image-rendering: pixelated;
+      border-top: 3px solid var(--white);
+      border-bottom: 3px solid var(--white);
+      background: var(--blue2);
+    }
+
+    .win-screen p {
+      margin: 0 18px 18px;
+      color: var(--yellow);
+      font-weight: 900;
+    }
+
+    .win-copy {
+      max-width: 720px;
+      margin: 0 auto 18px;
+      text-align: left;
+    }
+
+    .win-copy p {
+      margin: 0 18px 12px;
+    }
+
+    .win-copy a {
+      color: var(--cyan);
+    }
+
+    .win-actions {
+      display: flex;
+      justify-content: center;
+      padding: 0 18px 22px;
     }
 
     @keyframes freeflower-spin {
@@ -1115,7 +1201,7 @@
     @media (max-width: 760px) {
       .bar { grid-template-columns: 1fr; }
       header { top: 24px; }
-      main { padding-top: 42px; }
+      main { padding-top: 42px; padding-bottom: 250px; }
       .freeflower-link {
         top: 32px;
         right: 8px;
@@ -1133,10 +1219,23 @@
       }
       .jukebox-controls {
         grid-template-columns: 1fr 1fr;
+        gap: 8px;
       }
       .jukebox select,
       .jukebox input[type="range"] {
         grid-column: 1 / -1;
+      }
+      .jukebox {
+        bottom: 8px;
+        width: calc(100vw - 16px);
+        padding: 0 10px 10px;
+      }
+      .jukebox::before {
+        margin: 0 -10px 10px;
+      }
+      .jukebox-now {
+        margin-top: 8px;
+        font-size: .82rem;
       }
     }
   </style>
@@ -1147,6 +1246,21 @@
   </a>
   <div class="meme-pop" id="memePop" role="status" aria-live="polite" title="Klick zum Schliessen">
     <img id="memeImage" src="assets/memes/meme_1.jpg" alt="Programmier-Meme" />
+  </div>
+  <div class="win-overlay" id="winOverlay" role="dialog" aria-modal="true" aria-labelledby="winOverlayTitle">
+    <div class="win-screen">
+      <h2 id="winOverlayTitle">YOU HAVE WON</h2>
+      <img src="assets/backgrounds/stairways_to_heaven_pixel.png" alt="Pixel art stairway rising through clouds into heavenly light" />
+      <div class="win-copy">
+        <p><strong>System restored.</strong> LEE-GPT-9000 wurde in den Ferienmodus versetzt. Moodle läuft wieder, das WLAN atmet, die Zeugnisse sind gerettet, und der Auftraggeber tut so, als sei diese Eskalation natürlich Teil des Unterrichtsdesigns gewesen.</p>
+        <p><strong>Abschlussfrage für die Klasse:</strong> Welches Informatik-Konzept aus diesem Jahr wird Ihnen vermutlich am längsten bleiben?</p>
+        <p>Ich wünsche Ihnen alles Beste für Ihre Zukunft. Für Fragen können Sie mich jederzeit gerne kontaktieren: <a href="mailto:cyril.blum@edu.zh.ch">cyril.blum@edu.zh.ch</a>.</p>
+        <p>LinkedIn: <a href="https://www.linkedin.com/in/cvblum/" target="_blank" rel="noopener noreferrer">linkedin.com/in/cvblum</a><br>Webseite: <a href="https://cblum.ch/" target="_blank" rel="noopener noreferrer">cblum.ch</a></p>
+      </div>
+      <div class="win-actions">
+        <button type="button" onclick="resetGame()">Game wiederholen</button>
+      </div>
+    </div>
   </div>
   <header>
     <div class="bar">
@@ -1183,7 +1297,7 @@
       <div style="text-align: center; margin-bottom: 24px;">
         <img src="assets/backgrounds/leeos_logo.png" alt="LeeOS Logo" style="max-width: 300px; height: auto;" />
       </div>
-      <h2>Story: Die Kantonsschule im Lee wurde gehackt</h2>
+      <h2>👾 Die Kantonsschule im Lee wurde gehackt 👾</h2>
       <p>
         Es ist Freitag, 07:58 Uhr. Moodle hustet, der Beamer flackert, und auf dem Bildschirm steht:
         <span class="mono">LEE-GPT-9000 HAS TAKEN CONTROL</span>. Die KI hat aus Stundenplänen, Prüfungen und WLAN-Logs
@@ -1486,7 +1600,7 @@ for i in range(n):
         <p>Wie oft erscheint die Meldung insgesamt, und welche asymptotische Laufzeit hat der Algorithmus?</p>
         <div class="input-row">
           <input id="answer7count" autocomplete="off" placeholder="Anzahl" />
-          <input id="answer7runtime" autocomplete="off" placeholder="Laufzeit" />
+          <input id="answer7runtime" autocomplete="off" placeholder="Laufzeit (s. Hint)" />
           <button onclick="check(7)">Prüfen</button>
           <button class="secondary" onclick="hint(7)">Hinweis</button>
         </div>
@@ -1564,11 +1678,12 @@ for i in range(n):
     <section class="jukebox" aria-label="Jukebox">
       <div class="jukebox-controls">
         <select id="jukeboxTrack" aria-label="Song wählen">
+          <option value="assets/sound/1 HOUR ARCADE GAMING MUSIC Gaming, Arcade, 8Bit, Fantasy, Science-Fiction, RPG, Retro, Console.mp3">1 Hour Arcade Gaming Music</option>
+          <option value="assets/sound/Castle Frankenstein (2017) - TempleOS Game.mp3">Castle Frankenstein - TempleOS Game</option>
           <option value="assets/sound/Smooth Criminal - Michael Jackson's Moonwalker (Arcade) Soundtrack.mp3">Michael Jackson - Smooth Criminal</option>
           <option value="assets/sound/Hechizeros Band - El Sonidito.mp3">Hechizeros Band - El Sonidito</option>
           <option value="assets/sound/Aretha Franklin - Chain of Fools (Official Lyric Video).mp3">Aretha Franklin - Chain of Fools</option>
           <option value="assets/sound/Son Of A Preacher Man.mp3">Son Of A Preacher Man</option>
-          <option value="assets/sound/Castle Frankenstein (2017) - TempleOS Game.mp3">Castle Frankenstein - TempleOS Game</option>
         </select>
         <button type="button" onclick="playJukebox()">Play</button>
         <button type="button" class="secondary" onclick="pauseJukebox()">Pause</button>
@@ -2196,6 +2311,7 @@ for i in range(n):
         feedback.textContent = "Abfrage akzeptiert. System lädt neu...";
         setTimeout(() => {
           document.getElementById("win").classList.remove("hidden");
+          document.getElementById("winOverlay").classList.add("show");
         }, 800);
         playEffect("correct");
       } else {
