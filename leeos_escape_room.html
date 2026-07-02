@@ -19,7 +19,20 @@
       --shadow: #000044;
     }
 
-    * { box-sizing: border-box; }
+    body.konami-mode {
+      --blue: #220044;
+      --blue2: #003355;
+      --cyan: #ff66ff;
+      --yellow: #66ffcc;
+      --red: #ff3355;
+      --green: #ffff66;
+      animation: konami-palette 1.2s steps(4, end) infinite;
+    }
+
+    * {
+      box-sizing: border-box;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' shape-rendering='crispEdges'%3E%3Cpath fill='%23fff' d='M4 2h4v2h2v2h2v2h2v2h2v2h2v2h2v4h-4v-2h-2v6h-4v-8h-2v6H8V8H6V6H4z'/%3E%3Cpath fill='%23000' d='M2 0h8v2h2v2h2v2h2v2h2v2h2v2h2v8h-6v-2h-1v6H8v-8H6v6H4V10H2zm2 2v4h2v2h2v12h2v-6h4v8h2v-8h4v-2h-2v-2h-2V8h-2V6h-2V4h-2V2z'/%3E%3C/svg%3E") 4 2, pointer !important;
+    }
 
     html { background: var(--blue); }
 
@@ -118,7 +131,7 @@
     main {
       max-width: 1180px;
       margin: 0 auto;
-      padding: 52px 18px 60px;
+      padding: 52px 18px 190px;
     }
 
     .hero, .room, .finale {
@@ -262,7 +275,7 @@
 
     .raid-slice.revealed {
       border-color: var(--yellow);
-      background-image: url("assets/gta_auftraggeber.png");
+      background-image: url("assets/backgrounds/bg_0.png");
       background-size: 300% 300%;
       color: transparent;
     }
@@ -369,6 +382,7 @@
     .py-num { color: #b5cea8; }
     .py-op { color: #d4d4d4; }
     .py-punc { color: #808080; }
+    .py-comment { color: #6a9955; }
 
     .code-input {
       display: inline-block;
@@ -492,6 +506,11 @@
       font-size: .78rem;
     }
 
+    .debug-box button.reset {
+      background: var(--red);
+      color: var(--white);
+    }
+
     .feedback {
       margin-top: 10px;
       min-height: 24px;
@@ -538,6 +557,95 @@
       box-shadow: inset 0 0 0 2px #003300, 4px 4px 0 var(--black);
       font-weight: 900;
       animation: terminal-glow 1.3s steps(2, end) infinite;
+    }
+
+    .terminal-window {
+      background: #1f1f1f;
+      border: 1px solid #8b8b8b;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4), 4px 4px 0 var(--black);
+      margin: 12px 0;
+      font-family: "Courier New", Courier, monospace;
+    }
+
+    .terminal-header {
+      background: linear-gradient(to bottom, #d5d5d5, #b8b8b8);
+      border-bottom: 1px solid #999;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 32px;
+    }
+
+    .terminal-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-button {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .terminal-button.red { background: #ff5f56; }
+    .terminal-button.yellow { background: #ffbd2e; }
+    .terminal-button.green { background: #27c93f; }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .terminal-content {
+      background: #000;
+      color: #00ff00;
+      padding: 12px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      min-height: 120px;
+      font-weight: 600;
+    }
+
+    .terminal-content div {
+      margin: 2px 0;
+    }
+
+    .terminal-input {
+      background: #000;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 2px 4px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.95rem;
+      font-weight: 600;
+      width: 80%;
+      outline: none;
+    }
+
+    .terminal-input:focus {
+      border-color: #ffff00;
+      box-shadow: 0 0 4px #ffff00;
+    }
+
+    .terminal-input.ok {
+      border-color: #00ff00;
+      background: #001100;
+      color: #00ff00;
+    }
+
+    .terminal-input.nope {
+      border-color: #ff0000;
+      background: #330000;
+      color: #ff6666;
     }
 
     .small { font-size: .9rem; color: var(--cyan); }
@@ -593,6 +701,10 @@
       animation: meme-pop-in .16s steps(2, end), meme-crash 2.2s steps(8, end) forwards;
     }
 
+    .meme-pop.sticky.show {
+      animation: meme-pop-in .16s steps(2, end);
+    }
+
     .meme-pop::before {
       content: "MEME.EXE // GENERAL FAILURE";
       display: block;
@@ -612,9 +724,304 @@
       background: var(--black);
     }
 
+    .meme-window {
+      position: fixed;
+      right: calc(18px + var(--stack-offset, 0px));
+      bottom: calc(150px + var(--stack-offset, 0px));
+      z-index: var(--stack-z, 240);
+      width: min(340px, calc(100vw - 36px));
+      max-height: min(58vh, 480px);
+      padding: 8px;
+      border: 3px solid var(--yellow);
+      background: var(--white);
+      box-shadow: 8px 8px 0 var(--black);
+      transform: rotate(-1deg);
+      animation: meme-pop-in .16s steps(2, end);
+    }
+
+    .meme-window::before {
+      content: "MEME.EXE // RANDOM ACCESS";
+      display: block;
+      margin: -8px -8px 8px;
+      padding: 4px 42px 4px 8px;
+      background: var(--yellow);
+      color: var(--black);
+      border-bottom: 3px solid var(--black);
+      font-weight: 900;
+    }
+
+    .meme-window img {
+      display: block;
+      width: 100%;
+      max-height: calc(min(58vh, 480px) - 34px);
+      object-fit: contain;
+      background: var(--black);
+    }
+
+    .meme-close {
+      position: absolute;
+      top: 3px;
+      right: 4px;
+      width: 30px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 2px solid var(--black);
+      background: var(--red);
+      color: var(--white);
+      box-shadow: 2px 2px 0 var(--black);
+      animation: none;
+      line-height: 1;
+    }
+
+    .jukebox {
+      position: fixed;
+      left: 50%;
+      right: auto;
+      bottom: 14px;
+      z-index: 360;
+      width: min(980px, calc(100vw - 28px));
+      border: 2px solid var(--white);
+      background: var(--black);
+      box-shadow: 8px 8px 0 var(--black);
+      margin: 0;
+      padding: 0 14px 14px;
+      transform: translateX(-50%);
+    }
+
+    .jukebox::before {
+      content: ":: JUKEBOX.SYS / ASSETS_SOUND ::"; 
+      display: block;
+      margin: 0 -14px 14px;
+      padding: 5px 9px;
+      background: var(--yellow);
+      color: var(--black);
+      border-bottom: 2px solid var(--white);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .jukebox-controls {
+      display: grid;
+      grid-template-columns: 1fr auto auto minmax(120px, 180px);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .jukebox select,
+    .jukebox input[type="range"] {
+      width: 100%;
+      min-width: 0;
+      border: 2px solid var(--white);
+      background: var(--blue2);
+      color: var(--yellow);
+      padding: 9px 10px;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 900;
+      box-shadow: 3px 3px 0 var(--black);
+    }
+
+    .jukebox input[type="range"] {
+      padding: 0;
+      accent-color: var(--yellow);
+    }
+
+    .jukebox-now {
+      margin-top: 10px;
+      color: var(--green);
+      font-weight: 900;
+      min-height: 20px;
+    }
+
+    .equalizer {
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      align-items: end;
+      gap: 3px;
+      height: 34px;
+      margin-top: 10px;
+      padding: 4px;
+      border: 2px solid var(--white);
+      background: var(--blue2);
+      box-shadow: inset 0 0 0 2px var(--black);
+    }
+
+    .eq-bar {
+      display: block;
+      height: 20%;
+      min-height: 4px;
+      background: var(--darkgray);
+      box-shadow: 2px 0 0 var(--black);
+    }
+
+    .jukebox.playing .eq-bar {
+      background: linear-gradient(to top, var(--green), var(--yellow), var(--red));
+      animation: eq-bounce var(--eq-speed, .72s) steps(5, end) infinite;
+      animation-delay: var(--eq-delay, 0s);
+    }
+
+    .mouse-pixel {
+      position: fixed;
+      z-index: 1000;
+      width: var(--pixel-size, 8px);
+      height: var(--pixel-size, 8px);
+      pointer-events: none;
+      background: var(--pixel-color, var(--yellow));
+      box-shadow: 2px 2px 0 var(--black);
+      animation: mouse-pixel-fade .62s steps(5, end) forwards;
+    }
+
+    .win-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(0, 0, 68, .92);
+    }
+
+    .win-overlay.show {
+      display: grid;
+    }
+
+    .win-screen {
+      width: min(860px, calc(100vw - 32px));
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+      border: 4px solid var(--yellow);
+      background: var(--black);
+      box-shadow: 12px 12px 0 var(--black);
+      text-align: center;
+    }
+
+    .win-screen::before {
+      content: ":: SYSTEM_RESTORED / YOU_HAVE_WON ::"; 
+      display: block;
+      padding: 6px 10px;
+      background: var(--yellow);
+      color: var(--black);
+      border-bottom: 4px solid var(--white);
+      font-weight: 900;
+    }
+
+    .win-screen h2 {
+      margin: 16px 14px 10px;
+      font-size: clamp(2rem, 7vw, 4.5rem);
+      color: var(--green);
+      text-shadow: 4px 4px 0 var(--blue);
+    }
+
+    .win-screen img {
+      display: block;
+      width: min(100%, 720px);
+      height: auto;
+      max-height: min(42vh, 420px);
+      object-fit: contain;
+      margin: 0 auto 16px;
+      image-rendering: pixelated;
+      border-top: 3px solid var(--white);
+      border-bottom: 3px solid var(--white);
+      background: var(--blue2);
+    }
+
+    .win-screen p {
+      margin: 0 18px 18px;
+      color: var(--yellow);
+      font-weight: 900;
+    }
+
+    .win-copy {
+      max-width: 720px;
+      margin: 0 auto 18px;
+      text-align: left;
+    }
+
+    .win-copy p {
+      margin: 0 18px 12px;
+    }
+
+    .win-copy a {
+      color: var(--cyan);
+    }
+
+    .win-actions {
+      display: flex;
+      justify-content: center;
+      padding: 0 18px 22px;
+    }
+
+    .konami-hint {
+      position: fixed;
+      right: 12px;
+      bottom: 150px;
+      z-index: 370;
+      padding: 7px 10px;
+      border: 2px solid var(--white);
+      background: var(--black);
+      color: var(--yellow);
+      box-shadow: 4px 4px 0 var(--black);
+      font-size: .72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      animation: konami-hint-flash 1.1s steps(3, end) infinite;
+    }
+
+    .meme-rain-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 355;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .meme-rain {
+      position: absolute;
+      top: -150px;
+      width: clamp(70px, 9vw, 140px);
+      border: 2px solid var(--yellow);
+      background: var(--white);
+      box-shadow: 5px 5px 0 var(--black);
+      animation: meme-rain-fall var(--fall-duration, 4s) linear forwards;
+    }
+
     @keyframes freeflower-spin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
+    }
+
+    @keyframes eq-bounce {
+      0%, 100% { height: 16%; }
+      20% { height: var(--eq-a, 70%); }
+      45% { height: var(--eq-b, 38%); }
+      70% { height: var(--eq-c, 92%); }
+    }
+
+    @keyframes mouse-pixel-fade {
+      0% { opacity: 1; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--drift-x, 8px), var(--drift-y, 10px)) scale(.35); }
+    }
+
+    @keyframes konami-palette {
+      0% { filter: hue-rotate(0deg) saturate(1.2); }
+      25% { filter: hue-rotate(80deg) saturate(1.8); }
+      50% { filter: hue-rotate(170deg) saturate(1.5) contrast(1.15); }
+      75% { filter: hue-rotate(260deg) saturate(2); }
+      100% { filter: hue-rotate(360deg) saturate(1.2); }
+    }
+
+    @keyframes konami-hint-flash {
+      0% { background: var(--black); color: var(--yellow); transform: translate(0, 0); }
+      33% { background: var(--red); color: var(--white); transform: translate(-1px, 1px); }
+      66% { background: var(--cyan); color: var(--black); transform: translate(1px, -1px); }
+      100% { background: var(--black); color: var(--yellow); transform: translate(0, 0); }
+    }
+
+    @keyframes meme-rain-fall {
+      0% { transform: translateY(-160px) rotate(-8deg); opacity: 0; }
+      8% { opacity: 1; }
+      100% { transform: translateY(calc(100vh + 220px)) rotate(28deg); opacity: .95; }
     }
 
     @keyframes button-blink {
@@ -706,6 +1113,198 @@
       51%, 100% { box-shadow: inset 0 0 0 2px var(--green), 4px 4px 0 var(--black); }
     }
 
+    @keyframes catalog-blink {
+      0%, 49%, 100% { opacity: 1; }
+      50%, 99% { opacity: 0.2; }
+    }
+
+    @keyframes rotate-3d {
+      0% { transform: rotateY(0deg) rotateX(0deg) scale(1); }
+      25% { transform: rotateY(90deg) rotateX(15deg) scale(1.2); }
+      50% { transform: rotateY(180deg) rotateX(0deg) scale(0.9); }
+      75% { transform: rotateY(90deg) rotateX(-15deg) scale(1.2); }
+      100% { transform: rotateY(0deg) rotateX(0deg) scale(1); }
+    }
+
+    @keyframes spin-slow {
+      from { transform: rotate(0deg) scale(1); }
+      to { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes float-up-down {
+      0%, 100% { transform: translateY(0) rotateZ(-5deg); }
+      50% { transform: translateY(-30px) rotateZ(5deg); }
+    }
+
+    @keyframes pulse-big {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.3); opacity: 1; }
+    }
+
+    @keyframes wobble {
+      0%, 100% { transform: rotateZ(0deg) rotateX(0deg); }
+      25% { transform: rotateZ(15deg) rotateX(10deg); }
+      50% { transform: rotateZ(0deg) rotateX(0deg); }
+      75% { transform: rotateZ(-15deg) rotateX(-10deg); }
+    }
+
+    @keyframes bounce-spin {
+      0%, 100% { transform: scale(1) rotateY(0deg); }
+      50% { transform: scale(1.4) rotateY(180deg); }
+    }
+
+    @keyframes flicker-glow {
+      0%, 10%, 20%, 100% { opacity: 1; transform: scale(1); }
+      5%, 15% { opacity: 0.4; transform: scale(0.9); }
+    }
+
+    @keyframes drift-circle {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(20px, -20px) rotate(120deg); }
+      66% { transform: translate(-15px, 25px) rotate(240deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+
+    .catalog-entry {
+      animation: catalog-blink 1.2s steps(2, end) infinite;
+    }
+
+    .deco-container {
+      position: fixed;
+      top: 90px;
+      width: 140px;
+      height: calc(100vh - 90px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 40px 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .deco-container.deco-left {
+      left: 0;
+    }
+
+    .deco-container.deco-right {
+      right: 0;
+    }
+
+    .deco-shape {
+      width: 100%;
+      text-align: center;
+      font-weight: 900;
+      perspective: 1000px;
+      pointer-events: auto;
+    }
+
+    .deco-shape:hover {
+      filter: brightness(1.3) saturate(1.25);
+    }
+
+    .deco-shape img {
+      width: 80px;
+      height: 80px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .deco-shape-1 { font-size: 2.8rem; color: rgba(85, 255, 255, 0.5); animation: spin-slow 12s linear infinite; }
+    .deco-shape-2 { font-size: 2.4rem; color: rgba(255, 255, 85, 0.5); animation: float-up-down 6s ease-in-out infinite; }
+    .deco-shape-3 { font-size: 2.6rem; color: rgba(85, 255, 255, 0.45); animation: pulse-big 5s ease-in-out infinite; }
+    .deco-shape-4 { 
+      perspective: 1200px;
+    }
+
+    .coin-3d {
+      width: 80px;
+      height: 80px;
+      position: relative;
+      margin: 0 auto;
+      animation: coin-spin-3d 6s linear infinite;
+      transform-style: preserve-3d;
+    }
+
+    .coin-3d::before,
+    .coin-3d::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.8), rgba(184, 134, 11, 0.6), rgba(139, 69, 19, 0.8));
+      border: 3px solid rgba(184, 134, 11, 0.9);
+      box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.5), inset 2px 2px 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 215, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: rgba(139, 69, 19, 0.8);
+    }
+
+    .coin-3d::before {
+      content: '$';
+      transform: translateZ(2px);
+    }
+
+    .coin-3d::after {
+      content: '$';
+      transform: translateZ(-2px) rotateY(180deg);
+    }
+
+    @keyframes coin-spin-3d {
+      0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+      25% { transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg); }
+      50% { transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg); }
+      75% { transform: rotateX(180deg) rotateY(270deg) rotateZ(135deg); }
+      100% { transform: rotateX(0deg) rotateY(360deg) rotateZ(180deg); }
+    }
+    .deco-shape-5 { font-size: 2.7rem; color: rgba(85, 255, 85, 0.45); animation: bounce-spin 8s ease-in-out infinite; }
+    .deco-shape-6 { font-size: 2.5rem; color: rgba(85, 255, 255, 0.4); animation: flicker-glow 4s ease-in-out infinite; }
+    .deco-shape-7 { font-size: 2.9rem; color: rgba(255, 255, 85, 0.45); animation: drift-circle 10s linear infinite; }
+
+    /* Right side animations */
+    .deco-shape-right-1 { animation: fancy-3d-rotate 8s ease-in-out infinite; }
+    .deco-shape-right-4 { animation: shrink-expand 4s ease-in-out infinite; }
+    .deco-shape-right-5 { animation: scale-pulse 6s ease-in-out infinite; }
+
+    @keyframes fancy-3d-rotate {
+      0% { opacity: 0.6; transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1); }
+      12.5% { opacity: 0.75; transform: rotateX(45deg) rotateY(45deg) rotateZ(20deg) scale(1.05); }
+      25% { opacity: 0.9; transform: rotateX(90deg) rotateY(90deg) rotateZ(45deg) scale(1.1); }
+      37.5% { opacity: 0.8; transform: rotateX(135deg) rotateY(135deg) rotateZ(70deg) scale(1.05); }
+      50% { opacity: 0.7; transform: rotateX(180deg) rotateY(180deg) rotateZ(90deg) scale(1); }
+      62.5% { opacity: 0.8; transform: rotateX(225deg) rotateY(225deg) rotateZ(110deg) scale(1.05); }
+      75% { opacity: 0.9; transform: rotateX(270deg) rotateY(270deg) rotateZ(135deg) scale(1.1); }
+      87.5% { opacity: 0.75; transform: rotateX(315deg) rotateY(315deg) rotateZ(160deg) scale(1.05); }
+      100% { opacity: 0.6; transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg) scale(1); }
+    }
+
+    @keyframes shrink-expand {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      25% { transform: scale(1.2); opacity: 0.8; }
+      50% { transform: scale(0.8); opacity: 0.5; }
+      75% { transform: scale(1.2); opacity: 0.8; }
+      100% { transform: scale(0.8); opacity: 0.5; }
+    }
+
+    @keyframes scale-pulse {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+      25% { transform: scale(1.15) rotate(90deg); opacity: 0.9; }
+      50% { transform: scale(1) rotate(180deg); opacity: 0.7; }
+      75% { transform: scale(1.15) rotate(270deg); opacity: 0.9; }
+    }
+
+    .blink-e {
+      animation: blink-e-anim 0.6s ease-in-out infinite;
+    }
+
+    @keyframes blink-e-anim {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: .001ms !important;
@@ -717,7 +1316,7 @@
     @media (max-width: 760px) {
       .bar { grid-template-columns: 1fr; }
       header { top: 24px; }
-      main { padding-top: 42px; }
+      main { padding-top: 42px; padding-bottom: 250px; }
       .freeflower-link {
         top: 32px;
         right: 8px;
@@ -733,15 +1332,61 @@
         bottom: 10px;
         width: min(300px, calc(100vw - 20px));
       }
+      .jukebox-controls {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .jukebox select,
+      .jukebox input[type="range"] {
+        grid-column: 1 / -1;
+      }
+      .jukebox {
+        bottom: 8px;
+        width: calc(100vw - 16px);
+        padding: 0 10px 10px;
+      }
+      .jukebox::before {
+        margin: 0 -10px 10px;
+      }
+      .jukebox-now {
+        margin-top: 8px;
+        font-size: .82rem;
+      }
+      .equalizer {
+        height: 28px;
+        gap: 2px;
+      }
+      .konami-hint {
+        right: 8px;
+        bottom: 238px;
+        font-size: .62rem;
+      }
     }
   </style>
 </head>
 <body>
   <a class="freeflower-link" href="https://github.com/CyrilBlum/FreeFlower" target="_blank" rel="noopener" aria-label="FreeFlower Unterrichts-Repo öffnen" title="FreeFlower Unterrichts-Repo">
-    <img src="assets/freeflower.png" alt="FreeFlower" />
+    <img src="assets/backgrounds/bg_4.png" alt="FreeFlower" />
   </a>
   <div class="meme-pop" id="memePop" role="status" aria-live="polite" title="Klick zum Schliessen">
-    <img id="memeImage" src="assets/meme-prog-confused.jpg" alt="Programmier-Meme" />
+    <img id="memeImage" src="assets/memes/meme_1.jpg" alt="Programmier-Meme" />
+  </div>
+  <div class="meme-rain-layer" id="memeRainLayer" aria-hidden="true"></div>
+  <div class="konami-hint">↑ ↑ ↓ ↓ ← → ← → B A</div>
+  <div class="win-overlay" id="winOverlay" role="dialog" aria-modal="true" aria-labelledby="winOverlayTitle">
+    <div class="win-screen">
+      <h2 id="winOverlayTitle">YOU HAVE WON</h2>
+      <img src="assets/backgrounds/stairways_to_heaven_pixel.png" alt="Pixel art stairway rising through clouds into heavenly light" />
+      <div class="win-copy">
+        <p><strong>System restored.</strong> LEE-GPT-9000 wurde in den Ferienmodus versetzt. Moodle läuft wieder, das WLAN atmet, die Zeugnisse sind gerettet, und der Auftraggeber tut so, als sei diese Eskalation natürlich Teil des Unterrichtsdesigns gewesen.</p>
+        <p><strong>Abschlussfrage für die Klasse:</strong> Welches Informatik-Konzept aus diesem Jahr wird Ihnen vermutlich am längsten bleiben?</p>
+        <p>Ich wünsche Ihnen alles Beste für Ihre Zukunft. Für Fragen können Sie mich jederzeit gerne kontaktieren: <a href="mailto:cyril.blum@edu.zh.ch">cyril.blum@edu.zh.ch</a>.</p>
+        <p>LinkedIn: <a href="https://www.linkedin.com/in/cvblum/" target="_blank" rel="noopener noreferrer">linkedin.com/in/cvblum</a><br>Webseite: <a href="https://cblum.ch/" target="_blank" rel="noopener noreferrer">cblum.ch</a></p>
+      </div>
+      <div class="win-actions">
+        <button type="button" onclick="resetGame()">Game wiederholen</button>
+      </div>
+    </div>
   </div>
   <header>
     <div class="bar">
@@ -755,24 +1400,43 @@
         <div class="debug-box">
           <input id="debugPassword" type="password" autocomplete="off" placeholder="DEBUG" />
           <button onclick="activateDebug()">DBG</button>
+          <button class="reset" onclick="resetGame()">RESET</button>
         </div>
       </div>
     </div>
   </header>
 
+  <div class="deco-container deco-left">
+    <div class="deco-shape deco-shape-1"><img src="assets/backgrounds/bg_3.png" alt="TemplOS Icon" /></div>
+    <div class="deco-shape deco-shape-4"><div class="coin-3d"></div></div>
+    <div class="deco-shape deco-shape-5"><img src="assets/backgrounds/bg_2.png" alt="CIA Icon" /></div>
+  </div>
+
+  <div class="deco-container deco-right">
+    <div class="deco-shape deco-shape-right-1"><img src="assets/backgrounds/founder.jpg" alt="Founder Icon" /></div>
+    <div class="deco-shape deco-shape-right-4"><img src="assets/backgrounds/bg_right_deco.jpeg" alt="Deco Image" /></div>
+    <div class="deco-shape deco-shape-right-5"><img src="assets/backgrounds/elephant.png" alt="Elephant" /></div>
+  </div>
+
   <main>
     <section class="hero">
-      <h2>Story: Die Kantonsschule im Lee wurde gehackt</h2>
+      <div style="text-align: center; margin-bottom: 24px;">
+        <img src="assets/backgrounds/leeos_logo.png" alt="LeeOS Logo" style="max-width: 300px; height: auto;" />
+      </div>
+      <h2>👾 Die Kantonsschule im Lee wurde gehackt 👾</h2>
       <p>
         Es ist Freitag, 07:58 Uhr. Moodle hustet, der Beamer flackert, und auf dem Bildschirm steht:
         <span class="mono">LEE-GPT-9000 HAS TAKEN CONTROL</span>. Die KI hat aus Stundenplänen, Prüfungen und WLAN-Logs
-        ein einziges, beleidigend selbstbewusstes Datenpaket gebaut.
+        ein einziges, beleidigend selbstbewusstes Datenpaket gebaut. Sie sperrt alle Türen des Schulgebäudes hinter verschlüsselten Sicherheitssystemen.
       </p>
       <p>
-        Ihr Auftraggeber ist bereits im Stressmodus. Arbeiten Sie sich Raum für Raum durchs Lee, sammeln Sie die Splitter aus den Systemen
-        und bringen Sie den Haupteingang wieder online, bevor der Pausengong alles endgültig einfriert.
+        Im Informatikzimmer 103 läuft noch ein Terminal. Das ist Ihr Basislager – von hier aus haben Sie Zugriff auf die Sicherheitssysteme der anderen Räume.
+        Die KI kontrolliert jede Tür einzeln. Um sie freizuschalten, müssen Sie versteckte Logiken aufbrechen, die in den Systemen selbst eingebaut sind.
       </p>
-      <div class="mission-line">AUFTRAG: Folgen Sie den Spuren. Das Gebäude antwortet nur auf saubere Rekonstruktion.</div>
+      <p>
+        Arbeiten Sie sich Raum für Raum durchs Lee, lösen Sie jedes System, sammeln Sie die Splitter und rekonstruieren Sie den Master-Key für den Haupteingang – bevor der Pausengong alles endgültig einfriert.
+      </p>
+      <div class="mission-line">AUFTRAG: Lösen Sie die Systeme. Sammeln Sie die Splitter. Stellen Sie den Master-Key wieder her.</div>
       <div class="grid">
         <div class="card"><strong>Team:</strong><br>3–4 Personen pro Zugriff</div>
         <div class="card"><strong>Zeitfenster:</strong><br>Bis der Gong alles einfriert</div>
@@ -780,35 +1444,45 @@
         <div class="card"><strong>Terminal:</strong><br>Leerzeichen und Gross-/Kleinschreibung sind nachsichtig</div>
       </div>
       <div class="grid">
-        <div class="card"><strong>Lageplan:</strong><br>Informatikzimmer (103) -> Lehrerzimmer -> Treppenhaus -> Mediothek -> Serverraum -> Aula -> Mensa -> Haupteingang</div>
-        <div class="card"><strong>Merke:</strong><br>Manche Türen behalten mehr, als sie anzeigen.</div>
+        <div class="card"><strong>Reihenfolge:</strong><br>Informatikzimmer (103) → Lehrerzimmer → Grosse Treppe → Mediothek → Serverraum → Aula → Mensa → Haupteingang</div>
+        <div class="card"><strong>Hinweis:</strong><br>Jedes gelöste System entsperrt die nächste Tür automatisch.</div>
       </div>
     </section>
 
     <section class="room" id="room1">
       <div class="room-title">
-        <div><h2>Station 1: Informatikzimmer (103)</h2><div class="small">Thema: Programmieren, Listen, Dictionaries, Bubble Sort</div></div>
+        <div><h2>Station 1: Informatikzimmer (103)</h2></div>
         <div class="badge" id="badge1">offen</div>
       </div>
       <div class="content">
         <div class="location">Aktueller Raum: Informatikzimmer (103)</div>
-        <p>Sie starten im Informatikzimmer 103. Auf dem Bildschirm neben der Tür zum Lehrerzimmer läuft ein Python-Skript mit sechs herausgebissenen Stellen.</p>
-        <pre class="python-code"><span class="py-var">daten</span> <span class="py-op">=</span> <span class="py-punc">[</span>
+        <p>Hier ist Ihre Zentrale. Auf dem Bildschirm neben der Tür läuft ein Skript – es verarbeitet Daten in einer Struktur mit sechs Lücken. Füllen Sie die Lücken sinnvoll aus und starten Sie das Programm. Die Ausgabe öffnet die erste Tür.</p>
+        <pre class="python-code"><span class="py-comment"># Daten: Liste mit Stationen, Messungen und Tokens</span>
+<span class="py-var">daten</span> <span class="py-op">=</span> <span class="py-punc">[</span>
     <span class="py-punc">{</span><span class="py-str">"station"</span><span class="py-punc">:</span> <span class="py-str">"K"</span><span class="py-punc">,</span> <span class="py-str">"messung"</span><span class="py-punc">:</span> <span class="py-punc">[</span><span class="py-num">4</span><span class="py-punc">,</span> <span class="py-num">2</span><span class="py-punc">,</span> <span class="py-num">1</span><span class="py-punc">]</span><span class="py-punc">,</span> <span class="py-str">"token"</span><span class="py-punc">:</span> <span class="py-str">"X"</span><span class="py-punc">}</span><span class="py-punc">,</span>
     <span class="py-punc">{</span><span class="py-str">"station"</span><span class="py-punc">:</span> <span class="py-str">"L"</span><span class="py-punc">,</span> <span class="py-str">"messung"</span><span class="py-punc">:</span> <span class="py-punc">[</span><span class="py-num">1</span><span class="py-punc">,</span> <span class="py-num">1</span><span class="py-punc">,</span> <span class="py-num">2</span><span class="py-punc">]</span><span class="py-punc">,</span> <span class="py-str">"token"</span><span class="py-punc">:</span> <span class="py-str">"Q"</span><span class="py-punc">}</span><span class="py-punc">,</span>
     <span class="py-punc">{</span><span class="py-str">"station"</span><span class="py-punc">:</span> <span class="py-str">"M"</span><span class="py-punc">,</span> <span class="py-str">"messung"</span><span class="py-punc">:</span> <span class="py-punc">[</span><span class="py-num">3</span><span class="py-punc">,</span> <span class="py-num">3</span><span class="py-punc">,</span> <span class="py-num">0</span><span class="py-punc">]</span><span class="py-punc">,</span> <span class="py-str">"token"</span><span class="py-punc">:</span> <span class="py-str">"P"</span><span class="py-punc">}</span><span class="py-punc">,</span>
     <span class="py-punc">{</span><span class="py-str">"station"</span><span class="py-punc">:</span> <span class="py-str">"N"</span><span class="py-punc">,</span> <span class="py-str">"messung"</span><span class="py-punc">:</span> <span class="py-punc">[</span><span class="py-num">2</span><span class="py-punc">,</span> <span class="py-num">3</span><span class="py-punc">,</span> <span class="py-num">3</span><span class="py-punc">]</span><span class="py-punc">,</span> <span class="py-str">"token"</span><span class="py-punc">:</span> <span class="py-str">"7"</span><span class="py-punc">}</span>
 <span class="py-punc">]</span>
 
+<span class="py-comment"># Index initialisieren </span>
 <span class="py-var">i</span> <span class="py-op">=</span> <input class="code-input short" id="blankA" data-blank="A" autocomplete="off" aria-label="Lücke A" />
+<span class="py-comment"># Mehrere Durchgänge durch die Liste</span>
 <span class="py-key">while</span> <span class="py-var">i</span> <span class="py-op">&lt;</span> <span class="py-fn">len</span><span class="py-punc">(</span><span class="py-var">daten</span><span class="py-punc">)</span> <span class="py-op">-</span> <span class="py-num">1</span><span class="py-punc">:</span>
+    <span class="py-comment"># Vergleichen Sie benachbarte Einträge</span>
     <span class="py-key">for</span> <span class="py-var">j</span> <span class="py-key">in</span> <span class="py-fn">range</span><span class="py-punc">(</span><span class="py-num">0</span><span class="py-punc">,</span> <span class="py-fn">len</span><span class="py-punc">(</span><span class="py-var">daten</span><span class="py-punc">)</span> <span class="py-op">-</span> <span class="py-num">1</span> <span class="py-op">-</span> <span class="py-var">i</span><span class="py-punc">)</span><span class="py-punc">:</span>
+        <span class="py-comment"># Wenn linker Eintrag grösser als rechter: tauschen</span>
         <span class="py-key">if</span> <span class="py-fn">sum</span><span class="py-punc">(</span><span class="py-var">daten</span><span class="py-punc">[</span><span class="py-var">j</span><span class="py-punc">]</span><span class="py-punc">[</span><span class="py-str">"messung"</span><span class="py-punc">]</span><span class="py-punc">)</span> <span class="py-op">&gt;</span> <span class="py-fn">sum</span><span class="py-punc">(</span><span class="py-var">daten</span><span class="py-punc">[</span><span class="py-var">j</span> <span class="py-op">+</span> <span class="py-num">1</span><span class="py-punc">]</span><span class="py-punc">[</span><span class="py-str">"messung"</span><span class="py-punc">]</span><span class="py-punc">)</span><span class="py-punc">:</span>
+            <span class="py-comment"># Sichern Sie den linken Eintrag</span>
             <span class="py-var">temp</span> <span class="py-op">=</span> <input class="code-input wide" id="blankB" data-blank="B" autocomplete="off" aria-label="Lücke B" />
+            <span class="py-comment"># Verschieben Sie den rechten nach links</span>
             <span class="py-var">daten</span><span class="py-punc">[</span><span class="py-var">j</span><span class="py-punc">]</span> <span class="py-op">=</span> <input class="code-input wide" id="blankC" data-blank="C" autocomplete="off" aria-label="Lücke C" />
+            <span class="py-comment"># Setzen Sie den gesicherten nach rechts</span>
             <span class="py-var">daten</span><span class="py-punc">[</span><span class="py-var">j</span> <span class="py-op">+</span> <span class="py-num">1</span><span class="py-punc">]</span> <span class="py-op">=</span> <input class="code-input" id="blankD" data-blank="D" autocomplete="off" aria-label="Lücke D" />
+    <span class="py-comment"># Nächster Durchgang</span>
     <span class="py-var">i</span> <span class="py-op">+=</span> <input class="code-input short" id="blankE" data-blank="E" autocomplete="off" aria-label="Lücke E" />
 
+<span class="py-comment"># Sammeln Sie alle Tokens aus der sortierten Liste</span>
 <span class="py-var">code</span> <span class="py-op">=</span> <span class="py-str">""</span>
 <span class="py-key">for</span> <span class="py-var">eintrag</span> <span class="py-key">in</span> <span class="py-var">daten</span><span class="py-punc">:</span>
     <span class="py-var">code</span> <span class="py-op">+=</span> <span class="py-var">eintrag</span><span class="py-punc">[</span><span class="py-str">"</span><input class="code-input" id="blankF" data-blank="F" autocomplete="off" aria-label="Lücke F" /><span class="py-str">"</span><span class="py-punc">]</span>
@@ -816,7 +1490,7 @@
 <span class="py-fn">print</span><span class="py-punc">(</span><span class="py-var">code</span><span class="py-punc">)</span></pre>
         <div class="blank-panel">
           <div class="input-row">
-            <button class="secondary" onclick="checkBlanks(true)">Lücken prüfen</button>
+            <button class="secondary" onclick="checkBlanks(true, true)">Lücken prüfen</button>
             <button class="secondary" onclick="showBlankHints()">Lücken-Hinweise</button>
           </div>
           <div class="blank-status" id="blankStatus">
@@ -827,45 +1501,63 @@
             <span id="blankStatusE">E: offen</span>
             <span id="blankStatusF">F: offen</span>
           </div>
-          <div class="hint" id="blankHints">A und E steuern die Schleife. B, C und D bilden den Tausch mit einer temporären Variable. F ist der Schlüssel im Dictionary, aus dem die Zeichen gesammelt werden.</div>
+          <div class="hint" id="blankHints">A und E kontrollieren Schleif-Verhalten. B, C, D sind für den Datenaustausch zuständig. F greift auf einen bestimmten Wert aus der Datenstruktur zu.</div>
         </div>
-        <p>Das Terminal unter dem Skript wartet auf die Ausgabe von <span class="mono">print(code)</span>.</p>
+        <p>Das Skript wird ausgeführt. Was steht im Terminal?</p>
         <div class="input-row">
           <input id="answer1" autocomplete="off" placeholder="Ausgabe eingeben" />
           <button onclick="check(1)">Prüfen</button>
           <button class="secondary" onclick="hint(1)">Hinweis</button>
         </div>
-        <div class="hint" id="hint1">Bubble Sort vergleicht Nachbarn. <span class="mono">i</span> startet beim ersten Durchlauf und wird nach jeder Runde um 1 erhöht. Beim Tausch wird zuerst der linke Eintrag zwischengespeichert.</div>
+        <div class="hint" id="hint1">Es ist eine Sortierlogik mit Austausch. Die temporäre Variable speichert einen Wert zwischenzeitlich. Der Dictionary-Schlüssel bestimmt, welche Zeichen am Ende zusammengefügt werden.</div>
         <div class="feedback" id="feedback1"></div>
       </div>
     </section>
 
     <section class="room locked" id="room2">
       <div class="room-title">
-        <div><h2>Station 2: Lehrerzimmer</h2><div class="small">Thema: Netzwerke, TCP, Protokolle</div></div>
+        <div><h2>Station 2: Lehrerzimmer</h2></div>
         <div class="badge" id="badge2">gesperrt</div>
       </div>
       <div class="content">
         <div class="location">Neuer Raum: Lehrerzimmer</div>
-        <p>Im Lehrerzimmer steckt ein alter Laptop am Netzwerk. Auf dem Display ist der Mitschnitt der Türsteuerung zu sehen, kurz bevor der Weg ins Treppenhaus freigegeben wird:</p>
-        <table>
-          <thead><tr><th>Nr.</th><th>Source</th><th>Destination</th><th>Protocol</th><th>Info</th></tr></thead>
-          <tbody>
-            <tr><td>1</td><td>10.42.0.11</td><td>10.42.0.99</td><td>TCP</td><td>SYN</td></tr>
-            <tr><td>2</td><td>10.42.0.99</td><td>10.42.0.11</td><td>TCP</td><td>SYN, ACK</td></tr>
-            <tr><td>3</td><td>10.42.0.11</td><td>10.42.0.99</td><td>TCP</td><td>ACK</td></tr>
-            <tr><td>4</td><td>10.42.0.11</td><td>10.42.0.99</td><td>HTTP</td><td>GET /moodle/noten</td></tr>
-          </tbody>
-        </table>
-        <p>Welche drei TCP-Flags bilden direkt vor dem HTTP-Zugriff die Verbindung?</p>
-        <div class="input-row">
-          <input id="answer2" autocomplete="off" placeholder="Antwort eingeben" />
-          <button onclick="check(2)">Prüfen</button>
-          <button class="secondary" onclick="hint(2)">Hinweis</button>
+        <p>Im Lehrerzimmer steht ein Admin-Laptop am Netzwerk. Das System verifiziert Authentizität durch zwei Abfragen – erst die Identität, dann die Erreichbarkeit. Das Terminal wartet auf Ihre Eingaben.</p>
+        <p><strong>Aufgabe:</strong> Finden Sie die IP-Adresse der Schule heraus. Die Admin-Seite ist erreichbar unter <b><span class="mono">teacher-laptop-03.klw.local</span></b>. Testen Sie die Erreichbarkeit dieser Adresse.</p>
+        
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-buttons">
+              <span class="terminal-button red"></span>
+              <span class="terminal-button yellow"></span>
+              <span class="terminal-button green"></span>
+            </div>
+            <div class="terminal-title">Terminal</div>
+          </div>
+          <div class="terminal-content" id="terminalContent">
+          </div>
         </div>
-        <div class="hint" id="hint2">
-          Lesen Sie nur die TCP-Zeilen vor dem HTTP-GET. Beim zweiten Paket kommen zwei Flags gleichzeitig.
-          <img class="hint-image" src="assets/tcp_handshake_hint.png" alt="Drei-Wege-Handshake im TCP-Protokoll" />
+
+        <div class="input-row">
+          <button class="secondary" onclick="hint(2)">Hinweise</button>
+        </div>
+        <div class="hint" id="hint2" style="display: none;">
+          <p><strong>Nützliche Netzwerk-Befehle:</strong></p>
+          <table style="margin-top: 8px; background: var(--white); color: var(--black);">
+            <thead>
+              <tr style="background: var(--cyan);">
+                <th style="border: 2px solid var(--black); padding: 8px;">Befehl</th>
+                <th style="border: 2px solid var(--black); padding: 8px;">Funktion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">ping &lt;IP&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Testet die Verbindung zu einem Computer</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">arp -a</span></td><td style="border: 2px solid var(--black); padding: 8px;">Zeigt die ARP-Tabelle (IP-zu-MAC-Mapping)</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">tracert &lt;IP&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Verfolgt die Route zu einem Computer</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">nslookup &lt;domain&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Findet die IP-Adresse zu einer URL</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">ifconfig</span></td><td style="border: 2px solid var(--black); padding: 8px;">Zeigt lokale Netzwerk-Konfiguration</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">netstat</span></td><td style="border: 2px solid var(--black); padding: 8px;">Zeigt aktive Netzwerk-Verbindungen</td></tr>
+            </tbody>
+          </table>
         </div>
         <div class="feedback" id="feedback2"></div>
       </div>
@@ -873,55 +1565,63 @@
 
     <section class="room locked" id="room3">
       <div class="room-title">
-        <div><h2>Station 3: Treppenhaus</h2><div class="small">Thema: Caesar, Häufigkeitsanalyse</div></div>
+        <div><h2>Station 3: Grosse Treppe</h2></div>
         <div class="badge" id="badge3">gesperrt</div>
       </div>
       <div class="content">
-        <div class="location">Neuer Raum: Treppenhaus</div>
-        <p>Sie stehen im Treppenhaus vor der Tür der Mediothek. Neben dem Türgriff klebt eine Caesar-Spur. Die Verschiebung ist egal; gesucht ist der Buchstabe, den man bei deutschen Texten am ehesten als häufigsten Klartextbuchstaben erwarten würde.</p>
+        <div class="location">Neuer Raum: Grosse Treppe</div>
+        <p>Neben der Mediothek-Tür klebt ein verschobenes Alphabet. Eine Notiz daneben sagt: <span class="mono">"Das Geheimnis liegt in der Sprache selbst. Welcher Buchstaben dominiert in der deutschen Sprache?"</span></p>
         <div class="media-panel cipher-wheel">
           <div>Alphabet</div><div class="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
-          <div>Caesar +4</div><div class="alphabet">EFGHIJKLMNOPQRSTUVWXYZABCD</div>
+          <div>Verschoben</div><div class="alphabet">EFGHIJKLMNOPQRSTUVWXYZABCD</div>
         </div>
-        <p>Welcher Buchstabe kommt in deutschen Texten typischerweise am häufigsten vor?</p>
+        <p>Was ist die Antwort?</p>
         <div class="input-row">
           <input id="answer3" autocomplete="off" placeholder="Antwort eingeben" />
           <button onclick="check(3)">Prüfen</button>
           <button class="secondary" onclick="hint(3)">Hinweis</button>
         </div>
-        <div class="hint" id="hint3">Nicht im Caesar-Alphabet zählen. Es geht um die deutsche Sprache.</div>
+        <div class="hint" id="hint3">Die Verschiebung ist eine Ablenkung. Denken Sie an typische deutsche Wörter und wie oft bestimmte Buchstaben darin vorkommen.</div>
         <div class="feedback" id="feedback3"></div>
       </div>
     </section>
 
     <section class="room locked" id="room4">
       <div class="room-title">
-        <div><h2>Station 4: Mediothek</h2><div class="small">Thema: Vigenère-Verschlüsselung</div></div>
+        <div><h2>Station 4: Mediothek</h2></div>
         <div class="badge" id="badge4">gesperrt</div>
       </div>
       <div class="content">
         <div class="location">Neuer Raum: Mediothek</div>
-        <p>Die Mediothek öffnet sich. Im digitalen Katalog blinkt ein gesperrter Eintrag, darunter steckt ein Vigenère-Zettel. Der Schlüssel besteht aus den drei Splittern, die Sie bis hierhin gesammelt haben.</p>
-        <pre>Schlüssel:  ? ? ?
-Geheimtext: DXENOSGIVQPSH</pre>
-        <div class="media-panel" id="vigenerePanel">
+        <p>Die Mediothek öffnet sich. Im digitalen Katalog <span class="catalog-entry" style="display: inline; border: 2px solid var(--red); padding: 4px 8px; font-weight: 900; color: var(--red);">blinkt ein gesperrter Eintrag</span>, darunter steckt ein Vigenère-Zettel. Der Schlüssel besteht aus den drei Splittern, die Sie bis hierhin gesammelt haben.</p>
+        <div style="background: var(--black); color: var(--cyan); padding: 12px; border: 2px solid var(--cyan); margin: 12px 0; font-family: monospace;">
+          <div>Schlüssel:  <input class="code-input" id="keyPart1" autocomplete="off" maxlength="1" style="width: 24px;" placeholder="?" /> <input class="code-input" id="keyPart2" autocomplete="off" maxlength="1" style="width: 24px;" placeholder="?" /> <input class="code-input" id="keyPart3" autocomplete="off" maxlength="1" style="width: 24px;" placeholder="?" /></div>
+          <div style="margin-top: 8px;">Geheimtext: <span class="catalog-entry" style="display: inline; border: 2px solid var(--yellow); padding: 4px 8px; font-weight: 900; color: var(--yellow);">DXENOSGIVQPSH</span></div>
+          <div style="margin-top: 8px;">
+            <button class="secondary" onclick="verifyVigenereKey()">Schlüssel prüfen</button>
+          </div>
+          <div class="feedback" id="feedbackKey" style="margin-top: 8px; font-size: 0.9rem;"></div>
+        </div>
+        <div class="media-panel" id="vigenerePanel" style="display: none;">
           <div class="small">Vigenère-Tabelle: Spaltentitel = Key, Zeilentitel = Plain.</div>
           <div id="vigenereTable"></div>
         </div>
-        <p>Welches Wort öffnet den gesperrten Katalogeintrag?</p>
-        <div class="input-row">
-          <input id="answer4" autocomplete="off" placeholder="Antwort eingeben" />
-          <button onclick="check(4)">Prüfen</button>
-          <button class="secondary" onclick="hint(4)">Hinweis</button>
+        <div id="vigenereQuestion" style="display: none;">
+          <p>Welches Wort öffnet den gesperrten Katalogeintrag?</p>
+          <div class="input-row">
+            <input id="answer4" autocomplete="off" placeholder="Antwort eingeben" />
+            <button onclick="check(4)">Prüfen</button>
+            <button class="secondary" onclick="hint(4)">Hinweis</button>
+          </div>
         </div>
-        <div class="hint" id="hint4">Nutzen Sie die ersten drei Splitter als Schlüssel und wiederholen Sie ihn unter dem ganzen Geheimtext.</div>
+        <div class="hint" id="hint4" style="display: none;">Nutzen Sie den Schlüssel und die Vigenère-Tabelle, um den Geheimtext zu entschlüsseln.</div>
         <div class="feedback" id="feedback4"></div>
       </div>
     </section>
 
     <section class="room locked" id="room5">
       <div class="room-title">
-        <div><h2>Station 5: Serverraum</h2><div class="small">Thema: Selbstkorrigierende Codes, RAID-4, XOR-Parität</div></div>
+        <div><h2>Station 5: Serverraum</h2></div>
         <div class="badge" id="badge5">gesperrt</div>
       </div>
       <div class="content">
@@ -954,11 +1654,11 @@ Geheimtext: DXENOSGIVQPSH</pre>
           <div class="raid-slice s9" id="raidSlice9">9</div>
         </div>
         <div class="input-row">
-          <button onclick="checkRaidRows(true)">Rekonstruktion prüfen</button>
+          <button onclick="checkRaidRows(true, true)">Rekonstruktion prüfen</button>
           <button class="secondary" onclick="hint(5)">Hinweis</button>
         </div>
         <div id="raidGameQuestion" class="hidden">
-          <p>Das Bild ist wiederhergestellt. Was ist das Lieblingsspiel von Herr Blum?</p>
+          <p>Das Bild ist wiederhergestellt. Was ist die Lieblings-Spielserie von Herrn Blum?</p>
           <div class="input-row">
             <input id="raidGameAnswer" autocomplete="off" placeholder="Lösungswort eingeben" />
             <button onclick="checkRaidGame()">Spiel prüfen</button>
@@ -976,7 +1676,7 @@ Geheimtext: DXENOSGIVQPSH</pre>
             Bei RAID 4 liegt diese Parität auf einer festen Paritätsdisk.
           </p>
           <p class="mono">A1 XOR A2 XOR A3 XOR Ap = 0</p>
-          <img class="hint-image" src="assets/raid4_hint.png" alt="RAID 4 mit Datenblöcken und fester Paritätsdisk" />
+          <img class="hint-image" src="assets/hints/hint_0.png" alt="RAID 4 mit Datenblöcken und fester Paritätsdisk" />
         </div>
         <div class="feedback" id="feedback5"></div>
       </div>
@@ -984,7 +1684,7 @@ Geheimtext: DXENOSGIVQPSH</pre>
 
     <section class="room locked" id="room6">
       <div class="room-title">
-        <div><h2>Station 6: Aula</h2><div class="small">Thema: True Positives, False Negatives, Sensitivität</div></div>
+        <div><h2>Station 6: Aula</h2></div>
         <div class="badge" id="badge6">gesperrt</div>
       </div>
       <div class="content">
@@ -1010,7 +1710,7 @@ Geheimtext: DXENOSGIVQPSH</pre>
 
     <section class="room locked" id="room7">
       <div class="room-title">
-        <div><h2>Station 7: Mensa</h2><div class="small">Thema: Algorithmen, Big-O, Humor</div></div>
+        <div><h2>Station 7: Mensa</h2></div>
         <div class="badge" id="badge7">gesperrt</div>
       </div>
       <div class="content">
@@ -1025,7 +1725,7 @@ for i in range(n):
         <p>Wie oft erscheint die Meldung insgesamt, und welche asymptotische Laufzeit hat der Algorithmus?</p>
         <div class="input-row">
           <input id="answer7count" autocomplete="off" placeholder="Anzahl" />
-          <input id="answer7runtime" autocomplete="off" placeholder="Laufzeit" />
+          <input id="answer7runtime" autocomplete="off" placeholder="Laufzeit (s. Hint)" />
           <button onclick="check(7)">Prüfen</button>
           <button class="secondary" onclick="hint(7)">Hinweis</button>
         </div>
@@ -1056,15 +1756,31 @@ for i in range(n):
         <div class="terminal">
           <div>&gt; SYSTEMSTATUS: instabil</div>
           <div>&gt; ROOT-TERMINAL: geschlossen</div>
+          <div>&gt; SQL-SHELL: initialisiert</div>
           <div>&gt; EINGABE ERWARTET</div>
           <span id="fragments" class="mono hidden"></span>
         </div>
-        <p>Sie sind wieder am Haupteingang. Das Terminal neben der Ausgangstür nimmt nur eine einzige Sequenz an. Was Sie unterwegs gesehen haben, muss jetzt reichen.</p>
+        <p>Sie sind wieder am Haupteingang. Das Terminal neben der Ausgangstür zeigt eine SQL-Shell. Schreiben Sie eine INSERT-Abfrage, die das Lösungswort (das Sie aus allen Splittern zusammengesetzt haben) in die Tabelle <span class="mono">solutions</span> unter der Spalte <span class="mono">leeos_2026</span> einfügt.</p>
         <div class="input-row">
-          <input id="finalAnswer" autocomplete="off" placeholder="Sequenz" />
-          <button onclick="checkFinal()">LeeOS reparieren</button>
+          <textarea id="finalAnswer" autocomplete="off" style="width: 100%; height: 80px; padding: 8px; font-family: monospace; border: 2px solid #fff; background: #000; color: #00ff00;"></textarea>
+        </div>
+        <div class="input-row">
+          <button onclick="checkFinal()">Abfrage ausführen</button>
+          <button class="secondary" onclick="hint(8)">SQL-Hinweis</button>
         </div>
         <div class="feedback" id="finalFeedback"></div>
+        <div class="hint" id="hint8" style="display: none;">
+          <p><strong>SQL INSERT-Syntax:</strong></p>
+          <p class="mono">INSERT INTO table_name (column1, column2) VALUES ('value1', 'value2');</p>
+          <p>Berücksichtigen Sie:</p>
+          <ul>
+            <li>Der Tabellenname ist <span class="mono">solutions</span></li>
+            <li>Die Spalte heißt <span class="mono">leeos_2026</span></li>
+            <li>Das Lösungswort ist eine Zeichenkette (in einfache oder doppelte Anführungszeichen)</li>
+            <li>Das Semikolon am Ende ist wichtig</li>
+          </ul>
+          <p><strong>Datenbank-Referenz:</strong> <a href="assets/output_book_ohne_loesungen_Datenbanken_Cheatsheet.pdf" target="_blank">Datenbanken Cheatsheet</a></p>
+        </div>
         <div id="win" class="hidden">
           <h3>System restored.</h3>
           <p>
@@ -1084,13 +1800,48 @@ for i in range(n):
       </div>
     </section>
 
+    <section class="jukebox" aria-label="Jukebox">
+      <div class="jukebox-controls">
+        <select id="jukeboxTrack" aria-label="Song wählen">
+          <option value="assets/sound/1 HOUR ARCADE GAMING MUSIC Gaming, Arcade, 8Bit, Fantasy, Science-Fiction, RPG, Retro, Console.mp3">1 Hour Arcade Gaming Music</option>
+          <option value="assets/sound/Castle Frankenstein (2017) - TempleOS Game.mp3">Castle Frankenstein - TempleOS Game</option>
+          <option value="assets/sound/Smooth Criminal - Michael Jackson's Moonwalker (Arcade) Soundtrack.mp3">Michael Jackson - Smooth Criminal</option>
+          <option value="assets/sound/Hechizeros Band - El Sonidito.mp3">Hechizeros Band - El Sonidito</option>
+          <option value="assets/sound/Aretha Franklin - Chain of Fools (Official Lyric Video).mp3">Aretha Franklin - Chain of Fools</option>
+          <option value="assets/sound/Son Of A Preacher Man.mp3">Son Of A Preacher Man</option>
+        </select>
+        <button type="button" onclick="playJukebox()">Play</button>
+        <button type="button" class="secondary" onclick="pauseJukebox()">Pause</button>
+        <input id="jukeboxVolume" type="range" min="0" max="1" step="0.05" value="0.7" aria-label="Jukebox Lautstärke" />
+      </div>
+      <div class="jukebox-now" id="jukeboxNow">READY: wählen und Play drücken.</div>
+      <div class="equalizer" id="jukeboxEqualizer" aria-hidden="true">
+        <span class="eq-bar" style="--eq-a: 76%; --eq-b: 30%; --eq-c: 88%; --eq-speed: .62s; --eq-delay: -.10s;"></span>
+        <span class="eq-bar" style="--eq-a: 42%; --eq-b: 78%; --eq-c: 58%; --eq-speed: .74s; --eq-delay: -.36s;"></span>
+        <span class="eq-bar" style="--eq-a: 91%; --eq-b: 44%; --eq-c: 70%; --eq-speed: .68s; --eq-delay: -.22s;"></span>
+        <span class="eq-bar" style="--eq-a: 55%; --eq-b: 86%; --eq-c: 38%; --eq-speed: .82s; --eq-delay: -.48s;"></span>
+        <span class="eq-bar" style="--eq-a: 84%; --eq-b: 35%; --eq-c: 95%; --eq-speed: .66s; --eq-delay: -.18s;"></span>
+        <span class="eq-bar" style="--eq-a: 34%; --eq-b: 68%; --eq-c: 52%; --eq-speed: .78s; --eq-delay: -.40s;"></span>
+        <span class="eq-bar" style="--eq-a: 72%; --eq-b: 47%; --eq-c: 82%; --eq-speed: .70s; --eq-delay: -.26s;"></span>
+        <span class="eq-bar" style="--eq-a: 96%; --eq-b: 55%; --eq-c: 64%; --eq-speed: .64s; --eq-delay: -.08s;"></span>
+        <span class="eq-bar" style="--eq-a: 48%; --eq-b: 92%; --eq-c: 44%; --eq-speed: .86s; --eq-delay: -.52s;"></span>
+        <span class="eq-bar" style="--eq-a: 80%; --eq-b: 32%; --eq-c: 90%; --eq-speed: .72s; --eq-delay: -.16s;"></span>
+        <span class="eq-bar" style="--eq-a: 39%; --eq-b: 75%; --eq-c: 56%; --eq-speed: .80s; --eq-delay: -.44s;"></span>
+        <span class="eq-bar" style="--eq-a: 88%; --eq-b: 40%; --eq-c: 73%; --eq-speed: .67s; --eq-delay: -.20s;"></span>
+        <span class="eq-bar" style="--eq-a: 61%; --eq-b: 82%; --eq-c: 36%; --eq-speed: .76s; --eq-delay: -.34s;"></span>
+        <span class="eq-bar" style="--eq-a: 93%; --eq-b: 50%; --eq-c: 84%; --eq-speed: .69s; --eq-delay: -.24s;"></span>
+        <span class="eq-bar" style="--eq-a: 45%; --eq-b: 71%; --eq-c: 62%; --eq-speed: .83s; --eq-delay: -.46s;"></span>
+        <span class="eq-bar" style="--eq-a: 78%; --eq-b: 37%; --eq-c: 98%; --eq-speed: .65s; --eq-delay: -.12s;"></span>
+      </div>
+    </section>
+
     <p class="footer-note">Anpassbar: Namen, Insider, Rätselcodes und Story lassen sich direkt im HTML/JavaScript ändern.</p>
   </main>
 
   <script>
     const rooms = {
       1: { answers: ["QPX7"], fragment: "L", solvedText: "Das Skript gibt einen Türimpuls. Das Lehrerzimmer öffnet sich. Splitter: L" },
-      2: { answers: ["SYN-SYNACK-ACK", "SYN/SYNACK/ACK", "SYNSYNACKACK"], fragment: "E", solvedText: "Die Verbindung steht. Die Treppenhaustür springt auf. Splitter: E" },
+      2: { answers: ["ICMPSEQ0"], fragment: "E", solvedText: "Der Computer antwortet. Die Treppenhaustür springt auf. Splitter: E" },
       3: { answers: ["E"], fragment: "E", solvedText: "Der Buchstabe passt. Die Tür der Mediothek klickt auf. Splitter: E" },
       4: { answers: ["STACKOVERFLOW"], fragment: "S", solvedText: "Der Katalog entsperrt den Nebengang. Der Serverraum ist frei. Splitter: S" },
       5: { answers: [], fragment: "T", solvedText: "Der RAID-Verbund ist wieder vollständig. Die Aula leuchtet im Lageplan auf. Splitter: T" },
@@ -1122,17 +1873,35 @@ for i in range(n):
       9: "0"
     };
     const memeImages = [
-      "assets/meme-prog-comment.jpg",
-      "assets/meme-prog-confused.jpg",
-      "assets/meme-prog-make-it-nice.jpeg",
-      "assets/meme-prog-packing-cubes.jpg",
-      "assets/meme-sandwich.jpeg",
-      "assets/meme-tram-sbb.jpeg",
-      "assets/meme-el-tony-mate-ginger.png",
-      "assets/meme-params-which.png",
-      "assets/meme-prog-8-squares.png"
+      "assets/memes/meme_0.jpg",
+      "assets/memes/meme_1.jpg",
+      "assets/memes/meme_2.jpeg",
+      "assets/memes/meme_3.jpg",
+      "assets/memes/meme_4.jpeg",
+      "assets/memes/meme_5.jpeg",
+      "assets/memes/meme_6.png",
+      "assets/memes/meme_7.png",
+      "assets/memes/meme_8.png"
     ];
     let memeTimer = null;
+    const effectSounds = {
+      wrong: "assets/sound/erro.mp3",
+      correct: "assets/sound/tada_1.mp3",
+      hint: "assets/sound/cartoon-flip_0mhhTzj.mp3",
+      yay: "assets/sound/yay-roblox.mp3"
+    };
+    const effectPlayers = Object.fromEntries(
+      Object.entries(effectSounds).map(([key, src]) => [key, new Audio(src)])
+    );
+    const jukeboxAudio = new Audio();
+    jukeboxAudio.loop = true;
+    jukeboxAudio.autoplay = true;
+    let jukeboxUnlockArmed = false;
+    let memeWindowCount = 0;
+    const konamiSequence = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+    let konamiIndex = 0;
+    let memeRainTimer = null;
+    let lastMousePixelAt = 0;
 
     function normalise(s) {
       return (s || "")
@@ -1158,31 +1927,255 @@ for i in range(n):
       localStorage.setItem(storageKey, JSON.stringify({ solved: [...solved], debugUnlocked }));
     }
 
-    function showMeme() {
+    function resetGame() {
+      localStorage.removeItem(storageKey);
+      jukeboxAudio.pause();
+      window.location.reload();
+    }
+
+    function showMeme(requireClose = false) {
       const pop = document.getElementById("memePop");
       const img = document.getElementById("memeImage");
       if (!pop || !img) return;
       const next = memeImages[Math.floor(Math.random() * memeImages.length)];
       img.src = next;
       pop.classList.remove("show");
+      pop.classList.toggle("sticky", requireClose);
       void pop.offsetWidth;
       pop.classList.add("show");
       clearTimeout(memeTimer);
-      memeTimer = setTimeout(() => pop.classList.remove("show"), 2300);
+      memeTimer = null;
+      if (!requireClose) {
+        memeTimer = setTimeout(() => {
+          if (!pop.classList.contains("sticky")) pop.classList.remove("show");
+          memeTimer = null;
+        }, 2300);
+      }
+    }
+
+    function openMemeWindow() {
+      const next = memeImages[Math.floor(Math.random() * memeImages.length)];
+      const windowEl = document.createElement("div");
+      const closeButton = document.createElement("button");
+      const img = document.createElement("img");
+      const offset = Math.min(memeWindowCount * 26, 208);
+      memeWindowCount += 1;
+
+      windowEl.className = "meme-window";
+      windowEl.style.setProperty("--stack-offset", offset + "px");
+      windowEl.style.setProperty("--stack-z", String(240 + memeWindowCount));
+      windowEl.setAttribute("role", "dialog");
+      windowEl.setAttribute("aria-label", "Zufalls-Meme");
+
+      closeButton.className = "meme-close";
+      closeButton.type = "button";
+      closeButton.textContent = "X";
+      closeButton.setAttribute("aria-label", "Meme schliessen");
+      closeButton.addEventListener("click", event => {
+        event.stopPropagation();
+        windowEl.remove();
+      });
+
+      img.src = next;
+      img.alt = "Programmier-Meme";
+      windowEl.append(closeButton, img);
+      document.body.appendChild(windowEl);
+    }
+
+    function playEffect(name) {
+      const player = effectPlayers[name];
+      if (!player) return;
+      player.currentTime = 0;
+      player.play().catch(() => {});
+    }
+
+    function selectedTrackName() {
+      const select = document.getElementById("jukeboxTrack");
+      if (!select) return "";
+      return select.options[select.selectedIndex].textContent;
+    }
+
+    function setJukeboxPlaying(isPlaying) {
+      document.querySelector(".jukebox")?.classList.toggle("playing", isPlaying);
+    }
+
+    function playJukebox() {
+      const select = document.getElementById("jukeboxTrack");
+      const volume = document.getElementById("jukeboxVolume");
+      const now = document.getElementById("jukeboxNow");
+      if (!select) return;
+      if (jukeboxAudio.src !== new URL(select.value, window.location.href).href) {
+        jukeboxAudio.src = select.value;
+      }
+      jukeboxAudio.volume = volume ? Number(volume.value) : 0.7;
+      jukeboxAudio.play().then(() => {
+        if (now) now.textContent = "PLAYING: " + selectedTrackName();
+        setJukeboxPlaying(true);
+      }).catch(() => {
+        if (now) now.textContent = "CLICK NEEDED: Play noch einmal drücken.";
+        setJukeboxPlaying(false);
+      });
+    }
+
+    function pauseJukebox() {
+      const now = document.getElementById("jukeboxNow");
+      jukeboxAudio.pause();
+      setJukeboxPlaying(false);
+      if (now) now.textContent = "PAUSED: " + selectedTrackName();
+    }
+
+    function playSonidito() {
+      const select = document.getElementById("jukeboxTrack");
+      if (!select) return;
+      select.value = "assets/sound/Hechizeros Band - El Sonidito.mp3";
+      playJukebox();
+    }
+
+    function playSecretSong() {
+      const select = document.getElementById("jukeboxTrack");
+      const now = document.getElementById("jukeboxNow");
+      if (!select) return;
+      jukeboxAudio.src = "assets/sound/Cash In Your Face.mp3";
+      jukeboxAudio.volume = Number(document.getElementById("jukeboxVolume")?.value || 0.7);
+      jukeboxAudio.play().then(() => {
+        if (now) now.textContent = "SECRET TRACK: Stevie Wonder - Cash In Your Face";
+        setJukeboxPlaying(true);
+      }).catch(() => {
+        if (now) now.textContent = "SECRET TRACK READY: klick zum Starten.";
+        setJukeboxPlaying(false);
+        armJukeboxUnlock();
+      });
+    }
+
+    function spawnRainMeme() {
+      const layer = document.getElementById("memeRainLayer");
+      if (!layer) return;
+      const img = document.createElement("img");
+      img.className = "meme-rain";
+      img.src = memeImages[Math.floor(Math.random() * memeImages.length)];
+      img.alt = "";
+      img.style.left = Math.floor(Math.random() * 92) + "vw";
+      img.style.setProperty("--fall-duration", (3.2 + Math.random() * 2.8).toFixed(2) + "s");
+      layer.appendChild(img);
+      img.addEventListener("animationend", () => img.remove());
+    }
+
+    function startMemeRain() {
+      const layer = document.getElementById("memeRainLayer");
+      if (!layer) return;
+      clearInterval(memeRainTimer);
+      layer.innerHTML = "";
+      for (let i = 0; i < 12; i++) setTimeout(spawnRainMeme, i * 140);
+      memeRainTimer = setInterval(spawnRainMeme, 180);
+      setTimeout(() => {
+        clearInterval(memeRainTimer);
+        memeRainTimer = null;
+      }, 8500);
+    }
+
+    function activateKonamiMode() {
+      document.body.classList.add("konami-mode");
+      playSecretSong();
+      startMemeRain();
+      setTimeout(() => document.body.classList.remove("konami-mode"), 12000);
+    }
+
+    function handleKonami(event) {
+      const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+      if (key === konamiSequence[konamiIndex]) {
+        konamiIndex += 1;
+        if (konamiIndex === konamiSequence.length) {
+          konamiIndex = 0;
+          activateKonamiMode();
+        }
+        return;
+      }
+      konamiIndex = key === konamiSequence[0] ? 1 : 0;
+    }
+
+    function autoplayJukebox() {
+      const select = document.getElementById("jukeboxTrack");
+      const volume = document.getElementById("jukeboxVolume");
+      const now = document.getElementById("jukeboxNow");
+      if (!select) return;
+      jukeboxAudio.src = select.value;
+      jukeboxAudio.volume = volume ? Number(volume.value) : 0.7;
+      jukeboxAudio.play().then(() => {
+        if (now) now.textContent = "AUTOPLAYING: " + selectedTrackName();
+        setJukeboxPlaying(true);
+      }).catch(() => {
+        if (now) now.textContent = "AUTOPLAY BLOCKED: Play drücken.";
+        setJukeboxPlaying(false);
+        armJukeboxUnlock();
+      });
+    }
+
+    function dropMousePixel(event) {
+      const now = Date.now();
+      if (now - lastMousePixelAt < 28) return;
+      lastMousePixelAt = now;
+      const pixel = document.createElement("span");
+      const colors = ["#ffff55", "#55ffff", "#55ff55", "#ff55ff", "#ffffff"];
+      pixel.className = "mouse-pixel";
+      pixel.style.left = event.clientX + "px";
+      pixel.style.top = event.clientY + "px";
+      pixel.style.setProperty("--pixel-size", (5 + Math.floor(Math.random() * 7)) + "px");
+      pixel.style.setProperty("--pixel-color", colors[Math.floor(Math.random() * colors.length)]);
+      pixel.style.setProperty("--drift-x", (Math.random() * 22 - 11).toFixed(1) + "px");
+      pixel.style.setProperty("--drift-y", (8 + Math.random() * 18).toFixed(1) + "px");
+      document.body.appendChild(pixel);
+      pixel.addEventListener("animationend", () => pixel.remove());
+    }
+
+    function armJukeboxUnlock() {
+      if (jukeboxUnlockArmed) return;
+      jukeboxUnlockArmed = true;
+      const unlock = () => {
+        jukeboxUnlockArmed = false;
+        playJukebox();
+        document.removeEventListener("pointerdown", unlock);
+        document.removeEventListener("keydown", unlock);
+      };
+      document.addEventListener("pointerdown", unlock, { once: true });
+      document.addEventListener("keydown", unlock, { once: true });
     }
 
     function activateDebug() {
       const input = document.getElementById("debugPassword");
-      const value = normalise(input.value);
-      if (value === "BLUMDEBUG" || value === "DEBUG") {
-        debugUnlocked = true;
+      const value = (input.value || "").trim().toUpperCase();
+      if (value === "THE_REAL_BLUM") {
+        debugUnlocked = !debugUnlocked;
         input.value = "";
-        input.placeholder = "DEBUG AKTIV";
+        input.placeholder = debugUnlocked ? "DEBUG AKTIV" : "DEBUG AUS";
         save();
         update();
+        playEffect("correct");
       } else {
         input.value = "";
         input.placeholder = "FALSCH";
+        playEffect("wrong");
+      }
+    }
+
+    function verifyVigenereKey() {
+      const feedback = document.getElementById("feedbackKey");
+      const key1 = document.getElementById("keyPart1").value.toUpperCase().trim();
+      const key2 = document.getElementById("keyPart2").value.toUpperCase().trim();
+      const key3 = document.getElementById("keyPart3").value.toUpperCase().trim();
+      
+      const enteredKey = key1 + key2 + key3;
+      const expectedKey = "LEE";
+      
+      if (enteredKey === expectedKey) {
+        feedback.className = "feedback good";
+        feedback.textContent = "Schlüssel korrekt! Nutzen Sie die Vigenère-Tabelle, um den Text manuell zu entschlüsseln.";
+        document.getElementById("vigenerePanel").style.display = "block";
+        document.getElementById("vigenereQuestion").style.display = "block";
+        playEffect("correct");
+      } else {
+        feedback.className = "feedback bad";
+        feedback.textContent = "Schlüssel ungültig. Der Schlüssel besteht aus den Splittern der Stationen 1-3.";
+        playEffect("wrong");
       }
     }
 
@@ -1204,7 +2197,7 @@ for i in range(n):
       target.innerHTML = html;
     }
 
-    function checkBlanks(showHints = false) {
+    function checkBlanks(showHints = false, playAudio = false) {
       let allGood = true;
       for (const key of Object.keys(blankSolutions)) {
         const input = document.getElementById("blank" + key);
@@ -1212,22 +2205,176 @@ for i in range(n):
         const answer = normaliseCode(input.value);
         const valid = blankSolutions[key].answers.map(normaliseCode).includes(answer);
         const empty = answer.length === 0;
+        const wasCorrect = input.dataset.correct === "true";
 
         input.classList.toggle("ok", valid);
         input.classList.toggle("nope", !valid && !empty);
         status.className = valid ? "ok" : (!empty ? "nope" : "");
         status.textContent = key + ": " + (valid ? "richtig" : (showHints ? blankSolutions[key].hint : "offen"));
+        input.dataset.correct = valid ? "true" : "false";
+        if (valid && !wasCorrect) playEffect("yay");
         if (!valid) allGood = false;
       }
+      if (playAudio) playEffect(allGood ? "correct" : "wrong");
       return allGood;
     }
 
     function showBlankHints() {
       document.getElementById("blankHints").style.display = "block";
       checkBlanks(true);
+      playEffect("hint");
     }
 
-    function checkRaidRows(showFeedback = false) {
+    function checkTerminalBlanks(showFeedback = false) {
+      const nslookupHost = (document.getElementById("nslookupHost").value || "").trim().toLowerCase();
+      const nslookupIP = (document.getElementById("nslookupIP").value || "").trim();
+      const pingIP = (document.getElementById("pingIP").value || "").trim();
+
+      const hostValid = nslookupHost === "teacher-laptop-03.klw.local";
+      const ipValid = nslookupIP === "10.42.3.44";
+      const pingValid = pingIP === "10.42.3.44";
+
+      document.getElementById("nslookupHost").classList.toggle("ok", hostValid);
+      document.getElementById("nslookupHost").classList.toggle("nope", !hostValid && nslookupHost.length > 0);
+      document.getElementById("nslookupIP").classList.toggle("ok", ipValid);
+      document.getElementById("nslookupIP").classList.toggle("nope", !ipValid && nslookupIP.length > 0);
+      document.getElementById("pingIP").classList.toggle("ok", pingValid);
+      document.getElementById("pingIP").classList.toggle("nope", !pingValid && pingIP.length > 0);
+
+      document.getElementById("statusNslookup").textContent = hostValid ? "Hostname: ✓" : "Hostname: ✗";
+      document.getElementById("statusNslookup").className = hostValid ? "ok" : "";
+      document.getElementById("statusIP").textContent = ipValid ? "IP-Adresse: ✓" : "IP-Adresse: ✗";
+      document.getElementById("statusIP").className = ipValid ? "ok" : "";
+      document.getElementById("statusPing").textContent = pingValid ? "Ping-IP: ✓" : "Ping-IP: ✗";
+      document.getElementById("statusPing").className = pingValid ? "ok" : "";
+
+      // Show ping response if all are correct
+      if (hostValid && ipValid && pingValid) {
+        document.getElementById("pingEcho").textContent = "10.42.3.44";
+        document.getElementById("pingResponse").classList.remove("hidden");
+        document.getElementById("pingResponse2").classList.remove("hidden");
+      } else {
+        document.getElementById("pingEcho").textContent = "";
+        document.getElementById("pingResponse").classList.add("hidden");
+        document.getElementById("pingResponse2").classList.add("hidden");
+      }
+
+      return hostValid && ipValid && pingValid;
+    }
+
+    function showTerminalHints() {
+      document.getElementById("terminalHints").style.display = "block";
+      checkTerminalBlanks();
+      playEffect("hint");
+    }
+
+    function playTerminalSubmitSound(input) {
+      if (input && input.classList.contains("nope")) playEffect("wrong");
+    }
+
+    function checkCommands() {
+      const terminalContent = document.getElementById("terminalContent");
+      if (!terminalContent) return;
+
+      // Create cmd1 input if it doesn't exist
+      let cmd1Input = document.getElementById("cmd1");
+      if (!cmd1Input) {
+        const cmd1Div = document.createElement("div");
+        cmd1Div.innerHTML = '$ <input class="terminal-input cmd-input" id="cmd1" autocomplete="off" aria-label="Befehl 1: nslookup" />';
+        terminalContent.appendChild(cmd1Div);
+        cmd1Input = document.getElementById("cmd1");
+        cmd1Input.addEventListener("input", () => checkCommands());
+        cmd1Input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            checkCommands();
+            playTerminalSubmitSound(cmd1Input);
+          }
+        });
+        cmd1Input.focus();
+        return;
+      }
+
+      const cmd1 = (cmd1Input.value || "").trim().toLowerCase();
+      const cmd1Correct = cmd1 === "nslookup teacher-laptop-03.klw.local";
+
+      // Check command 1
+      if (cmd1Correct && !document.getElementById("cmd2")) {
+        cmd1Input.classList.add("ok");
+        cmd1Input.classList.remove("nope");
+
+        // Add nslookup output
+        const output1 = document.createElement("div");
+        output1.innerHTML = `<div>Server:  10.42.0.1</div>
+<div>Address: 10.42.0.1#53</div>
+<div></div>
+<div>Non-authoritative answer:</div>
+<div>Name:    teacher-laptop-03.klw.local</div>
+<div>Address: 10.42.3.44</div>
+<div></div>`;
+        terminalContent.appendChild(output1);
+
+        // Add cmd2 input
+        const cmd2Div = document.createElement("div");
+        cmd2Div.innerHTML = '$ <input class="terminal-input cmd-input" id="cmd2" autocomplete="off" aria-label="Befehl 2: ping" />';
+        terminalContent.appendChild(cmd2Div);
+
+        const cmd2Input = document.getElementById("cmd2");
+        cmd2Input.addEventListener("input", () => checkCommands());
+        cmd2Input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            checkCommands();
+            playTerminalSubmitSound(cmd2Input);
+          }
+        });
+        cmd2Input.focus();
+      } else if (!cmd1Correct && cmd1.length > 0) {
+        cmd1Input.classList.add("nope");
+        cmd1Input.classList.remove("ok");
+      } else if (cmd1.length === 0) {
+        cmd1Input.classList.remove("ok", "nope");
+      }
+
+      // Check command 2
+      const cmd2Input = document.getElementById("cmd2");
+      if (cmd2Input && cmd1Correct) {
+        const cmd2 = (cmd2Input.value || "").trim().toLowerCase();
+        const cmd2Correct = cmd2 === "ping 10.42.3.44";
+
+        if (cmd2Correct && !document.getElementById("pingOutput")) {
+          cmd2Input.classList.add("ok");
+          cmd2Input.classList.remove("nope");
+
+          // Add ping output
+          const output2 = document.createElement("div");
+          output2.id = "pingOutput";
+          output2.innerHTML = `<div>PING 10.42.3.44 (10.42.3.44): 56 data bytes</div>
+<div>64 bytes from 10.42.3.44: icmp_seq=0 ttl=64 time=12.3 ms</div>
+<div>64 bytes from 10.42.3.44: icmp_seq=1 ttl=64 time=11.8 ms</div>
+<div style="color: #ffff00; margin-top: 4px; font-weight: bold;">✓ Verbindung erfolgreich!</div>`;
+          terminalContent.appendChild(output2);
+
+          // Mark as solved
+          solved.add(2);
+          const feedbackEl = document.getElementById("feedback2");
+          if (feedbackEl) {
+            feedbackEl.className = "feedback good";
+            feedbackEl.textContent = rooms[2].solvedText;
+          }
+          save();
+          update();
+          playEffect("correct");
+        } else if (!cmd2Correct && cmd2.length > 0) {
+          cmd2Input.classList.add("nope");
+          cmd2Input.classList.remove("ok");
+        } else if (cmd2.length === 0) {
+          cmd2Input.classList.remove("ok", "nope");
+        }
+      }
+    }
+
+    function checkRaidRows(showFeedback = false, playAudio = false) {
       let correct = 0;
       for (const row of Object.keys(raidSolutions)) {
         const input = document.getElementById("raid" + row);
@@ -1250,6 +2397,7 @@ for i in range(n):
           feedback.className = "feedback warn";
           feedback.textContent = "9/9 Zeilen rekonstruiert. Auf dem Monitor erscheint eine neue Frage.";
         }
+        if (playAudio) playEffect("correct");
         return true;
       }
 
@@ -1258,6 +2406,7 @@ for i in range(n):
         feedback.className = "feedback warn";
         feedback.textContent = correct + "/9 Zeilen rekonstruiert.";
         showMeme();
+        if (playAudio) playEffect("wrong");
       }
       return false;
     }
@@ -1265,26 +2414,33 @@ for i in range(n):
     function checkRaidGame() {
       const feedback = document.getElementById("feedback5");
       const answer = normalise(document.getElementById("raidGameAnswer").value);
-      if (!checkRaidRows(true)) return;
+      if (!checkRaidRows(true)) {
+        playEffect("wrong");
+        return;
+      }
 
-      if (answer === "GTA") {
+      if (answer === "GTA" || answer === "GRANDTHEFTAUTO" || answer === "GRANDTHEFTAUTO5" || answer === "GRANDTHEFTAUTOV") {
         solved.add(5);
         feedback.className = "feedback good";
         feedback.textContent = rooms[5].solvedText;
         save();
         update();
+        playEffect("correct");
+        playSonidito();
       } else {
         feedback.className = "feedback bad";
         feedback.textContent = "Das Bild ist rekonstruiert, aber das Spiel stimmt noch nicht.";
         showMeme();
+        playEffect("wrong");
       }
     }
 
     function check(n) {
       const input = document.getElementById("answer" + n);
       const feedback = document.getElementById("feedback" + n);
+      
       if (n === 5) {
-        checkRaidRows(true);
+        checkRaidRows(true, true);
         return;
       }
       if (n === 7) {
@@ -1298,6 +2454,7 @@ for i in range(n):
         feedback.className = "feedback warn";
         feedback.textContent = "Das Skript ist noch beschädigt.";
         showMeme();
+        playEffect("wrong");
         return;
       }
 
@@ -1307,15 +2464,18 @@ for i in range(n):
         feedback.textContent = rooms[n].solvedText;
         save();
         update();
+        playEffect("correct");
       } else {
         feedback.className = "feedback bad";
         feedback.textContent = "Noch nicht. Irgendwo stimmt die Spur nicht.";
         showMeme();
+        playEffect("wrong");
       }
     }
 
     function hint(n) {
       document.getElementById("hint" + n).style.display = "block";
+      playEffect("hint");
     }
 
     function normaliseRuntime(s) {
@@ -1335,10 +2495,12 @@ for i in range(n):
         feedback.textContent = rooms[7].solvedText;
         save();
         update();
+        playEffect("correct");
       } else {
         feedback.className = "feedback bad";
         feedback.textContent = "Das Orakel bleibt still.";
         showMeme();
+        playEffect("wrong");
       }
     }
 
@@ -1350,6 +2512,11 @@ for i in range(n):
         room.classList.toggle("locked", !unlocked);
         room.classList.toggle("solved", solved.has(i));
         badge.textContent = solved.has(i) ? "gelöst" : (debugUnlocked && !solved.has(i) ? "debug" : (unlocked ? "offen" : "gesperrt"));
+      }
+
+      // Initialize terminal for room2 when unlocked
+      if ((debugUnlocked || solved.has(1)) && !document.getElementById("cmd1")) {
+        checkCommands();
       }
 
       const count = solved.size;
@@ -1369,19 +2536,29 @@ for i in range(n):
 
     function checkFinal() {
       const feedback = document.getElementById("finalFeedback");
-      const answer = normalise(document.getElementById("finalAnswer").value);
-      if (answer === "LEEST24") {
+      const answer = document.getElementById("finalAnswer").value.trim().toUpperCase();
+      
+      // Prüfe, ob die Eingabe eine valide INSERT-Abfrage mit LEEST24 ist
+      const sqlPattern = /INSERT\s+INTO\s+SOLUTIONS\s*\(\s*LEEOS_2026\s*\)\s+VALUES\s*\(\s*['"]LEEST24['"]\s*\)\s*;?/i;
+      
+      if (sqlPattern.test(answer)) {
         feedback.className = "feedback good";
-        feedback.textContent = "Sequenz akzeptiert.";
-        document.getElementById("win").classList.remove("hidden");
+        feedback.textContent = "Abfrage akzeptiert. System lädt neu...";
+        setTimeout(() => {
+          document.getElementById("win").classList.remove("hidden");
+          document.getElementById("winOverlay").classList.add("show");
+        }, 800);
+        playEffect("correct");
       } else {
         feedback.className = "feedback bad";
-        feedback.textContent = "Falsche Sequenz. Das Terminal bleibt zu.";
+        feedback.textContent = "SQL-Syntax ungültig oder falsches Lösungswort. Bitte versuchen Sie es erneut.";
         showMeme();
+        playEffect("wrong");
       }
     }
 
     document.addEventListener("keydown", e => {
+      handleKonami(e);
       if (e.key === "Enter") {
         const active = document.activeElement;
         if (!active || !active.id) return;
@@ -1390,16 +2567,21 @@ for i in range(n):
           return;
         }
         if (active.dataset && active.dataset.blank) {
-          checkBlanks(true);
+          checkBlanks(true, true);
           return;
         }
         if (active.dataset && active.dataset.raid) {
-          checkRaidRows(true);
+          checkRaidRows(true, true);
           return;
         }
         if (active.id === "raidGameAnswer") checkRaidGame();
         if (active.id === "answer7count" || active.id === "answer7runtime") {
           checkBigO();
+          return;
+        }
+        if (active.id === "cmd1" || active.id === "cmd2") {
+          checkCommands();
+          playTerminalSubmitSound(active);
           return;
         }
         const m = active.id.match(/^answer([1-6])$/);
@@ -1416,13 +2598,113 @@ for i in range(n):
       input.addEventListener("input", () => checkRaidRows(false));
     });
 
-    document.getElementById("memePop").addEventListener("click", () => {
+    const cmd1 = document.getElementById("cmd1");
+    if (cmd1) {
+      cmd1.addEventListener("input", () => checkCommands());
+      cmd1.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          checkCommands();
+          playTerminalSubmitSound(cmd1);
+          if (document.getElementById("cmd2")) {
+            document.getElementById("cmd2").focus();
+          }
+        }
+      });
+    }
+
+    const cmd2 = document.getElementById("cmd2");
+    if (cmd2) {
+      cmd2.addEventListener("input", () => checkCommands());
+    }
+
+    document.getElementById("memePop").addEventListener("click", event => {
+      event.stopPropagation();
       clearTimeout(memeTimer);
-      document.getElementById("memePop").classList.remove("show");
+      memeTimer = null;
+      document.getElementById("memePop").classList.remove("show", "sticky");
     });
+
+    document.querySelectorAll(".deco-shape").forEach(symbol => {
+      symbol.tabIndex = 0;
+      symbol.setAttribute("role", "button");
+      symbol.setAttribute("aria-label", "Zufalls-Meme öffnen");
+      symbol.addEventListener("click", event => {
+        event.stopPropagation();
+        openMemeWindow();
+      });
+      symbol.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openMemeWindow();
+        }
+      });
+    });
+
+    document.getElementById("jukeboxTrack").addEventListener("change", () => {
+      const wasPlaying = !jukeboxAudio.paused;
+      jukeboxAudio.src = document.getElementById("jukeboxTrack").value;
+      document.getElementById("jukeboxNow").textContent = "LOADED: " + selectedTrackName();
+      if (wasPlaying) playJukebox();
+    });
+
+    document.getElementById("jukeboxVolume").addEventListener("input", event => {
+      jukeboxAudio.volume = Number(event.target.value);
+    });
+
+    jukeboxAudio.addEventListener("play", () => setJukeboxPlaying(true));
+    jukeboxAudio.addEventListener("pause", () => setJukeboxPlaying(false));
+    jukeboxAudio.addEventListener("ended", () => setJukeboxPlaying(false));
+    document.addEventListener("pointermove", dropMousePixel);
 
     buildVigenereTable();
     update();
+    autoplayJukebox();
+    
+    // Initialize terminal for room 2
+    setTimeout(() => {
+      const terminalContent = document.getElementById("terminalContent");
+      if (terminalContent && terminalContent.innerHTML.trim() === "") {
+        checkCommands();
+      }
+    }, 100);
+
+    // Wrap all E letters with blink animation
+    function wrapELetters(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent;
+        const regex = /([eE])/g;
+        if (regex.test(text)) {
+          const fragment = document.createDocumentFragment();
+          let lastIndex = 0;
+          regex.lastIndex = 0;
+          let match;
+          while ((match = regex.exec(text)) !== null) {
+            if (match.index > lastIndex) {
+              fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
+            }
+            const span = document.createElement("span");
+            span.className = "blink-e";
+            span.textContent = match[1];
+            fragment.appendChild(span);
+            lastIndex = regex.lastIndex;
+          }
+          if (lastIndex < text.length) {
+            fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+          }
+          node.parentNode.replaceChild(fragment, node);
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== "SCRIPT" && node.nodeName !== "STYLE" && node.nodeName !== "CODE") {
+        const children = Array.from(node.childNodes);
+        children.forEach(child => wrapELetters(child));
+      }
+    }
+
+    // Only wrap E letters in room 3 (Grosse Treppe)
+    const room3 = document.getElementById("room3");
+    if (room3) {
+      wrapELetters(room3);
+    }
   </script>
 </body>
 </html>
