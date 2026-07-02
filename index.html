@@ -1550,11 +1550,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">nslookup &lt;domain&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Findet die IP-Adresse zu einer URL</td></tr>
-              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">host &lt;domain&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Ähnlich wie nslookup, DNS-Abfrage</td></tr>
-              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">ping &lt;IP oder domain&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Testet die Verbindung zu einem Computer</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">ping &lt;IP&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Testet die Verbindung zu einem Computer</td></tr>
               <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">arp -a</span></td><td style="border: 2px solid var(--black); padding: 8px;">Zeigt die ARP-Tabelle (IP-zu-MAC-Mapping)</td></tr>
               <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">tracert &lt;IP&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Verfolgt die Route zu einem Computer</td></tr>
+              <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">nslookup &lt;domain&gt;</span></td><td style="border: 2px solid var(--black); padding: 8px;">Findet die IP-Adresse zu einer URL</td></tr>
               <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">ifconfig</span></td><td style="border: 2px solid var(--black); padding: 8px;">Zeigt lokale Netzwerk-Konfiguration</td></tr>
               <tr><td style="border: 2px solid var(--black); padding: 8px;"><span class="mono">netstat</span></td><td style="border: 2px solid var(--black); padding: 8px;">Zeigt aktive Netzwerk-Verbindungen</td></tr>
             </tbody>
@@ -1659,7 +1658,7 @@
           <button class="secondary" onclick="hint(5)">Hinweis</button>
         </div>
         <div id="raidGameQuestion" class="hidden">
-          <p>Das Bild ist wiederhergestellt. Was ist das Lieblingsspiel von Herr Blum?</p>
+          <p>Das Bild ist wiederhergestellt. Was ist die Lieblings-Spielserie von Herrn Blum?</p>
           <div class="input-row">
             <input id="raidGameAnswer" autocomplete="off" placeholder="Lösungswort eingeben" />
             <button onclick="checkRaidGame()">Spiel prüfen</button>
@@ -2420,7 +2419,7 @@ for i in range(n):
         return;
       }
 
-      if (answer === "GTA") {
+      if (answer === "GTA" || answer === "GRANDTHEFTAUTO" || answer === "GRANDTHEFTAUTO5" || answer === "GRANDTHEFTAUTOV") {
         solved.add(5);
         feedback.className = "feedback good";
         feedback.textContent = rooms[5].solvedText;
